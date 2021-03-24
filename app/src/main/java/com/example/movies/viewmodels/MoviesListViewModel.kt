@@ -29,7 +29,9 @@ class MoviesListViewModel(
         get() = _moviesList
 
     init {
-        loadMoviesFromRepository()
+        viewModelScope.launch {
+            _moviesList.value = moviesListModel.loadMovies()
+        }
     }
 
     fun onItemClicked(movie: Movie) {
@@ -39,11 +41,5 @@ class MoviesListViewModel(
 
     fun onItemClickedComplete() {
         _eventItemClicked.value = false
-    }
-
-    fun loadMoviesFromRepository() {
-        viewModelScope.launch {
-            _moviesList.value = moviesListModel.loadMovies()
-        }
     }
 }
