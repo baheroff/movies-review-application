@@ -8,45 +8,39 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.adaptors.ActorAdapter
 import com.example.movies.data.Movie
 import com.example.movies.R
+import com.example.movies.data.Movies
+import com.example.movies.models.MoviesDetailsViewModel
 
-class FragmentMovieDetails(private val movie: Movie) : Fragment() {
+class FragmentMovieDetails(
+    private val movie: Movie
+) : Fragment() {
 
     private var backTransaction: BackTransaction? = null
+    private val viewModel: MoviesDetailsViewModel = MoviesDetailsViewModel()
 
-    private val actors = movie.actors
+    private var backgroundPicture: ImageView? = null
+    private var age: TextView? = null
+    private var title: TextView? = null
+    private var genres: TextView? = null
+    private var reviews: TextView? = null
+    private var description: TextView? = null
+    private var recyclerActors: RecyclerView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val backgroundPicture: ImageView = view.findViewById(R.id.back_pict)
-        val age: TextView = view.findViewById(R.id.age)
-        val title: TextView = view.findViewById(R.id.film)
-        val genres: TextView = view.findViewById(R.id.tag)
-        val reviews: TextView = view.findViewById(R.id.movie_reviews)
-        val description: TextView = view.findViewById(R.id.description)
+        initViews(view)
+        defineView()
+        setUpActorsAdapter()
+        setUpListeners()
 
-        Glide.with(this.context)
-                .load(movie.detailImageUrl)
-                .into(backgroundPicture)
-        title.text = movie.title
-        genres.text = movie.genres.joinToString { it.name }
-        reviews.text = getString(R.string.movie_num_reviews, movie.reviewCount)
-        description.text = movie.storyLine
-
-        view.findViewById<TextView>(R.id.back).apply {
-            setOnClickListener {
-                backTransaction?.backToMoviesList()
-            }
-        }
-
-        val list = view.findViewById<RecyclerView>(R.id.actors_list)
-        val adapter = context?.let { ActorAdapter(it, actors) }
-        list.adapter = adapter
+        viewModel.eventBackPressed.observe(this.viewLifecycleOwner, this::goToMainScreen)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -66,6 +60,55 @@ class FragmentMovieDetails(private val movie: Movie) : Fragment() {
     override fun onDetach() {
         super.onDetach()
         backTransaction = null
+        backgroundPicture = null
+        age = null
+        title = null
+        genres = null
+        reviews = null
+        description = null
+        recyclerActors?.adapter = null
+        recyclerActors = null
+    }
+
+    private fun initViews(view: View) {
+        backgroundPicture = view.findViewById(R.id.back_pict)
+        age = view.findViewById(R.id.age)
+        title = view.findViewById(R.id.film)
+        genres = view.findViewById(R.id.tag)
+        reviews = view.findViewById(R.id.movie_reviews)
+        description = view.findViewById(R.id.description)
+        recyclerActors = view.findViewById(R.id.actors_list)
+    }
+
+    private fun defineView() {
+        Glide.with(this.context)
+            .load(movie.detailImageUrl)
+            .into(backgroundPicture)
+        title?.text = movie.title
+        genres?.text = movie.genres.joinToString { it.name }
+        reviews?.text = getString(R.string.movie_num_reviews, movie.reviewCount)
+        description?.text = movie.storyLine
+    }
+
+    private fun setUpActorsAdapter() {
+        recyclerActors?.adapter = context?.let {
+            ActorAdapter(it, movie.actors)
+        }
+    }
+
+    private fun setUpListeners() {
+        view?.findViewById<TextView>(R.id.back)?.apply {
+            setOnClickListener {
+                viewModel.onBackPressed()
+            }
+        }
+    }
+
+    private fun goToMainScreen(isPressed: Boolean) {
+        if (isPressed) {
+            backTransaction?.backToMoviesList()
+            viewModel.onBackPressedComplete()
+        }
     }
 
     interface BackTransaction{
