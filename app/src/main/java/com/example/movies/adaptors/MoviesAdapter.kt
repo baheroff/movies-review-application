@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.movies.data.Movie
-import com.example.movies.fragments.FragmentMoviesList
 import com.example.movies.R
+import com.example.movies.viewmodels.MoviesListViewModel
 import com.google.android.material.card.MaterialCardView
 
 class MoviesAdapter(context: Context,
                     var movies: List<Movie>,
-                    private val itemClickListener: FragmentMoviesList.OnItemClickListener?
+                    private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<MovieViewHolder>()
 {
 
@@ -27,7 +27,7 @@ class MoviesAdapter(context: Context,
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(getItem(position), itemClickListener)
+        holder.bind(getItem(position), viewModel)
     }
 
     override fun getItemCount(): Int = movies.size
@@ -45,7 +45,7 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view){
     private val pg: ImageView = itemView.findViewById(R.id.pg)
     private val image: ImageView = itemView.findViewById(R.id.card_picture)
 
-   fun bind(movie: Movie, clickListener: FragmentMoviesList.OnItemClickListener?) {
+   fun bind(movie: Movie, viewModel: MoviesListViewModel) {
        title.text = movie.title
        duration.text = context.getString(R.string.movie_time, movie.runningTime)
        reviews.text = context.getString(R.string.movie_num_reviews, movie.reviewCount)
@@ -55,8 +55,6 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
        Glide.with(context)
                .load(movie.pgAge)
-               .apply(RequestOptions()
-                            .placeholder(R.drawable.loading_animation))
                .into(pg)
 
        Glide.with(context)
@@ -66,7 +64,7 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view){
                .into(image)
 
        itemView.findViewById<MaterialCardView>(R.id.card).setOnClickListener {
-           clickListener?.onItemClicked(movie)
+           viewModel.onItemClicked(movie)
        }
     }
 
