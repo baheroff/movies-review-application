@@ -2,7 +2,6 @@ package com.example.movies.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,30 +9,25 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movies.data.Movie
 import com.example.movies.adaptors.MoviesAdapter
-import com.example.movies.data.JsonMovieRepository
 import com.example.movies.R
-import kotlinx.coroutines.*
+import com.example.movies.viewmodels.MoviesListViewModel
 
 class FragmentMoviesList(context: Context) : Fragment() {
 
+    private val viewModel: MoviesListViewModel = MoviesListViewModel(context = context)
+
+    private var recyclerMovies: RecyclerView? = null
+
     private var onItemClickListener: OnItemClickListener? = null
-    private val moviesRepo = JsonMovieRepository(context)
-    private val handlerException = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.d("SCOPE_EXCEPTION", "${throwable.message}, $throwable")
-    }
-    private val scope = CoroutineScope(Dispatchers.IO + handlerException)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val list = view.findViewById<RecyclerView>(R.id.moviesList)
 
-        scope.launch{
-            val movies = moviesRepo.loadMovies()
-            val adapter = context?.let {
-                MoviesAdapter(it, movies, onItemClickListener)
-            }
-            list.adapter = adapter
-        }
+        initViews(view)
+        viewModel.loadMoviesFromRepository()
+
+        viewModel.moviesList.observe(this.viewLifecycleOwner, this::setUpMoviesListAdapter)
+        viewModel.eventItemClicked.observe(this.viewLifecycleOwner, this::openMovieDetails)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -41,11 +35,6 @@ class FragmentMoviesList(context: Context) : Fragment() {
                               savedInstanceState: Bundle?
     ): View? =
         inflater.inflate(R.layout.fragment_movies_list, container, false)
-
-
-    interface OnItemClickListener{
-        fun onItemClicked(movie: Movie)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,5 +46,28 @@ class FragmentMoviesList(context: Context) : Fragment() {
     override fun onDetach() {
         super.onDetach()
         onItemClickListener = null
+        recyclerMovies?.adapter = null
+        recyclerMovies = null
+    }
+
+    private fun initViews(view: View) {
+        recyclerMovies = view.findViewById(R.id.moviesList)
+    }
+
+    private fun openMovieDetails(isClicked: Boolean) {
+        if (isClicked) {
+            onItemClickListener?.onItemClicked(viewModel.movieDetailsToOpen)
+            viewModel.onItemClickedComplete()
+        }
+    }
+
+    private fun setUpMoviesListAdapter(movies: List<Movie>) {
+        recyclerMovies?.adapter = context?.let {
+            MoviesAdapter(it, movies, viewModel)
+        }
+    }
+
+    interface OnItemClickListener{
+        fun onItemClicked(movie: Movie)
     }
 }
