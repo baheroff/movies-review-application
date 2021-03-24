@@ -24,7 +24,6 @@ class FragmentMoviesList(context: Context) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
-        viewModel.loadMoviesFromRepository()
 
         viewModel.moviesList.observe(this.viewLifecycleOwner, this::setUpMoviesListAdapter)
         viewModel.eventItemClicked.observe(this.viewLifecycleOwner, this::openMovieDetails)

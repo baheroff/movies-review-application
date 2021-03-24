@@ -28,6 +28,10 @@ class MoviesListViewModel(
     val moviesList: LiveData<List<Movie>>
         get() = _moviesList
 
+    init {
+        loadMoviesFromRepository()
+    }
+
     fun onItemClicked(movie: Movie) {
         _movieDetailsToOpen = movie
         _eventItemClicked.value = true
