@@ -2,6 +2,7 @@ package com.example.movies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelStoreOwner
 import com.example.movies.data.Movie
 import com.example.movies.fragments.FragmentMovieDetails
 import com.example.movies.fragments.FragmentMoviesList
@@ -16,15 +17,12 @@ class MainActivity : AppCompatActivity(),
         const val MOVIES_LIST = "MOVIES"
     }
 
-    private var fragmentList: FragmentMoviesList? = null
-    private var fragmentAvengersDetails: FragmentMovieDetails? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if(savedInstanceState == null) {
-            fragmentList = FragmentMoviesList(this).apply {
+            FragmentMoviesList().apply {
                 supportFragmentManager.beginTransaction()
                         .add(R.id.main_container, this, MOVIES_LIST)
                         .commit()
@@ -32,8 +30,8 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onItemClicked(movie: Movie) {
-        fragmentAvengersDetails = FragmentMovieDetails(movie).apply {
+    override fun onItemClicked() {
+        FragmentMovieDetails().apply {
             supportFragmentManager.beginTransaction()
                     .add(R.id.main_container, this, MOVIE_DETAILS_TAG)
                     .addToBackStack(MOVIE_DETAILS_TAG)

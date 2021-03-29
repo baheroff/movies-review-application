@@ -2,19 +2,25 @@ package com.example.movies.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movies.data.Movie
 import com.example.movies.adaptors.MoviesAdapter
 import com.example.movies.R
 import com.example.movies.viewmodels.MoviesListViewModel
+import com.example.movies.viewmodels.ViewModelFactory
 
-class FragmentMoviesList(context: Context) : Fragment() {
+class FragmentMoviesList() : Fragment() {
 
-    private val viewModel: MoviesListViewModel = MoviesListViewModel(context = context)
+    private val viewModel: MoviesListViewModel
+        by activityViewModels { ViewModelFactory(requireContext()) }
 
     private var recyclerMovies: RecyclerView? = null
 
@@ -55,7 +61,7 @@ class FragmentMoviesList(context: Context) : Fragment() {
 
     private fun openMovieDetails(isClicked: Boolean) {
         if (isClicked) {
-            onItemClickListener?.onItemClicked(viewModel.movieDetailsToOpen)
+            onItemClickListener?.onItemClicked()
             viewModel.onItemClickedComplete()
         }
     }
@@ -67,6 +73,6 @@ class FragmentMoviesList(context: Context) : Fragment() {
     }
 
     interface OnItemClickListener{
-        fun onItemClicked(movie: Movie)
+        fun onItemClicked()
     }
 }
