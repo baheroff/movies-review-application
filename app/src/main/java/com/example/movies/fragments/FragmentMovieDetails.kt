@@ -8,15 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.*
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.adaptors.ActorAdapter
-import com.example.movies.data.Movie
 import com.example.movies.R
 import com.example.movies.viewmodels.MoviesDetailsViewModel
 import com.example.movies.viewmodels.MoviesListViewModel
-import com.example.movies.viewmodels.ViewModelFactory
 
 class FragmentMovieDetails : Fragment() {
 
