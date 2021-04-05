@@ -17,5 +17,10 @@
     <string name="avengers_pg">13+</string>
     <string name="back">Back</string>
     <string name="location">Movies list</string>
-    <string name="movie_time">%d MIN</string>
+    <string name="release_date">Release date: %s</string>
+    // Movies categories
+    <string name="top_rated">Top rated</string>
+    <string name="now_playing">Now playing</string>
+    <string name="popular">Popular</string>
+    <string name="upcoming">Upcoming</string>
 </resources>

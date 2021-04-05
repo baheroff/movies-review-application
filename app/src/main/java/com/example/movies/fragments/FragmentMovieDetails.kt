@@ -9,9 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.*
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
 import com.example.movies.adaptors.ActorAdapter
 import com.example.movies.R
+import com.example.movies.data.Actor
+import com.example.movies.data.Movie
 import com.example.movies.viewmodels.MoviesDetailsViewModel
 import com.example.movies.viewmodels.MoviesListViewModel
 
@@ -19,7 +21,9 @@ class FragmentMovieDetails : Fragment() {
 
     private var backTransaction: BackTransaction? = null
     private val listViewModel: MoviesListViewModel by activityViewModels()
-    private val viewModel: MoviesDetailsViewModel = MoviesDetailsViewModel()
+    private val viewModel: MoviesDetailsViewModel by lazy {
+        MoviesDetailsViewModel(listViewModel.movieDetailsToOpen.id)
+    }
 
     private var backgroundPicture: ImageView? = null
     private var age: TextView? = null
@@ -29,23 +33,24 @@ class FragmentMovieDetails : Fragment() {
     private var description: TextView? = null
     private var recyclerActors: RecyclerView? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initViews(view)
-        defineView()
-        setUpActorsAdapter()
-        setUpListeners()
-
-        viewModel.eventBackPressed.observe(this.viewLifecycleOwner, this::goToMainScreen)
-    }
-
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
     ): View? =
         inflater.inflate(R.layout.fragment_movie_details, container, false)
 
+    override fun onViewCreated(view: View,
+                               savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
+        defineViewsContent(listViewModel.movieDetailsToOpen)
+        setUpListeners()
+
+        viewModel.actorsList.observe(this.viewLifecycleOwner, this::setUpActorsAdapter)
+        viewModel.eventBackPressed.observe(this.viewLifecycleOwner, this::goToMainScreen)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -77,20 +82,28 @@ class FragmentMovieDetails : Fragment() {
         recyclerActors = view.findViewById(R.id.actors_list)
     }
 
-    private fun defineView() {
-        Glide.with(this.context)
-            .load(listViewModel.movieDetailsToOpen.detailImageUrl)
-            .into(backgroundPicture)
-        title?.text = listViewModel.movieDetailsToOpen.title
-        genres?.text = listViewModel.movieDetailsToOpen.genres.joinToString { it.name }
+    private fun defineViewsContent(movie: Movie) {
+
+        backgroundPicture?.load(listViewModel.baseImageUrl
+                                    + "original"
+                                    + (movie.detailImageUrl ?: movie.imageUrl)
+        ) {
+            placeholder(R.drawable.loading_animation)
+        }
+        title?.text = movie.title
+        genres?.text = movie.genresIds.joinToString { id ->
+            listViewModel.genres.find {
+                it.id == id
+            }?.name.toString()
+        }
         reviews?.text = getString(R.string.movie_num_reviews,
-                                  listViewModel.movieDetailsToOpen.reviewCount)
-        description?.text = listViewModel.movieDetailsToOpen.storyLine
+                                  movie.reviewCount)
+        description?.text = movie.storyLine
     }
 
-    private fun setUpActorsAdapter() {
+    private fun setUpActorsAdapter(actors: List<Actor>) {
         recyclerActors?.adapter = context?.let {
-            ActorAdapter(it, listViewModel.movieDetailsToOpen.actors)
+            ActorAdapter(it, actors, listViewModel)
         }
     }
 

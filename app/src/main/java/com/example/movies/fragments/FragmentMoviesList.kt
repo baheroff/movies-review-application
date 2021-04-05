@@ -2,44 +2,44 @@ package com.example.movies.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movies.data.Movie
 import com.example.movies.adaptors.MoviesAdapter
 import com.example.movies.R
 import com.example.movies.viewmodels.MoviesListViewModel
-import com.example.movies.viewmodels.ViewModelFactory
+import com.google.android.material.chip.ChipGroup
 
-class FragmentMoviesList() : Fragment() {
+class FragmentMoviesList : Fragment() {
 
-    private val viewModel: MoviesListViewModel
-        by activityViewModels { ViewModelFactory(requireContext()) }
+    private val viewModel: MoviesListViewModel by activityViewModels()
 
     private var recyclerMovies: RecyclerView? = null
+    private var chipsGroup: ChipGroup? = null
 
     private var onItemClickListener: OnItemClickListener? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initViews(view)
-
-        viewModel.moviesList.observe(this.viewLifecycleOwner, this::setUpMoviesListAdapter)
-        viewModel.eventItemClicked.observe(this.viewLifecycleOwner, this::openMovieDetails)
-    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
     ): View? =
         inflater.inflate(R.layout.fragment_movies_list, container, false)
+
+    override fun onViewCreated(view: View,
+                               savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
+        setUpChipsListener()
+
+        viewModel.moviesList.observe(this.viewLifecycleOwner, this::setUpMoviesListAdapter)
+        viewModel.eventItemClicked.observe(this.viewLifecycleOwner, this::openMovieDetails)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,6 +57,7 @@ class FragmentMoviesList() : Fragment() {
 
     private fun initViews(view: View) {
         recyclerMovies = view.findViewById(R.id.moviesList)
+        chipsGroup = view.findViewById(R.id.movies_categories)
     }
 
     private fun openMovieDetails(isClicked: Boolean) {
@@ -69,6 +70,12 @@ class FragmentMoviesList() : Fragment() {
     private fun setUpMoviesListAdapter(movies: List<Movie>) {
         recyclerMovies?.adapter = context?.let {
             MoviesAdapter(it, movies, viewModel)
+        }
+    }
+
+    private fun setUpChipsListener() {
+        chipsGroup?.setOnCheckedChangeListener { _, checkedId ->
+            viewModel.chipChecked(checkedId)
         }
     }
 

@@ -1,9 +1,20 @@
 package com.example.movies.data
 
-import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+data class Cast(
+        @SerialName("cast")
+        val moviesCast: List<Actor>
+)
+
+@Serializable
 data class Actor(
+        @SerialName("id")
         val id: Int,
+        @SerialName("name")
         val name: String,
-        val imageUrl: String,
-) : Serializable
+        @SerialName("profile_path")
+        val imageUrl: String?,
+)

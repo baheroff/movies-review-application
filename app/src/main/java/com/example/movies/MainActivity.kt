@@ -2,6 +2,7 @@ package com.example.movies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.movies.data.Movie
 import com.example.movies.fragments.FragmentMovieDetails
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity(),
         FragmentMovieDetails().apply {
             supportFragmentManager.beginTransaction()
                     .add(R.id.main_container, this, MOVIE_DETAILS_TAG)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .addToBackStack(MOVIE_DETAILS_TAG)
                     .commit()
         }
