@@ -7,23 +7,29 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
 import com.example.movies.data.Actor
 import com.example.movies.R
+import com.example.movies.viewmodels.MoviesListViewModel
 
 class ActorAdapter(context: Context,
-                   var actors: List<Actor>
+                   var actors: List<Actor>,
+                   private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<ActorViewHolder>()
 {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup,
+                                    viewType: Int
+    ): ActorViewHolder {
         return ActorViewHolder(inflater.inflate(R.layout.view_holder_actor, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: ActorViewHolder,
+                                  position: Int
+    ) {
+        holder.bind(getItem(position), viewModel)
     }
 
     override fun getItemCount(): Int = actors.size
@@ -37,10 +43,16 @@ class ActorViewHolder(view: View) : RecyclerView.ViewHolder(view){
     private val avatar: ImageView = view.findViewById(R.id.avatar)
     private val name: TextView = view.findViewById(R.id.name)
 
-    fun bind(actor: Actor){
-        Glide.with(context)
-                .load(actor.imageUrl)
-                .into(avatar)
+    fun bind(actor: Actor,
+             viewModel: MoviesListViewModel
+    ){
+        avatar.load(viewModel.baseImageUrl
+                    + "original"
+                    + actor.imageUrl
+        ) {
+            placeholder(R.drawable.loading_animation)
+        }
+
         name.text = actor.name
     }
 }
