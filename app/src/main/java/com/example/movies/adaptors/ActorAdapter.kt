@@ -12,22 +12,25 @@ import com.example.movies.data.Actor
 import com.example.movies.R
 import com.example.movies.viewmodels.MoviesListViewModel
 
-class ActorAdapter(context: Context,
-                   var actors: List<Actor>,
-                   private val viewModel: MoviesListViewModel
+class ActorAdapter(
+    context: Context,
+    var actors: List<Actor>,
+    private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<ActorViewHolder>()
 {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
     ): ActorViewHolder {
         return ActorViewHolder(inflater.inflate(R.layout.view_holder_actor, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ActorViewHolder,
-                                  position: Int
+    override fun onBindViewHolder(
+        holder: ActorViewHolder,
+        position: Int
     ) {
         holder.bind(getItem(position), viewModel)
     }
@@ -38,19 +41,23 @@ class ActorAdapter(context: Context,
 
 }
 
-class ActorViewHolder(view: View) : RecyclerView.ViewHolder(view){
+class ActorViewHolder(
+    view: View
+) : RecyclerView.ViewHolder(view){
 
     private val avatar: ImageView = view.findViewById(R.id.avatar)
     private val name: TextView = view.findViewById(R.id.name)
 
-    fun bind(actor: Actor,
-             viewModel: MoviesListViewModel
+    fun bind(
+        actor: Actor,
+        viewModel: MoviesListViewModel
     ){
         avatar.load(viewModel.baseImageUrl
                     + "original"
                     + actor.imageUrl
         ) {
-            placeholder(R.drawable.loading_animation)
+            placeholder(R.drawable.ic_actors_avatar_missing)
+            error(R.drawable.ic_actors_avatar_missing)
         }
 
         name.text = actor.name

@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/main_background_color"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingEnd="8dp"
@@ -20,7 +22,9 @@
             android:id="@+id/avatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:background="@color/gray_1"
+            tools:src="@drawable/ic_actors_avatar_missing"/>
 
     </androidx.cardview.widget.CardView>
 
@@ -33,5 +37,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/card_actor"
         app:layout_constraintStart_toStartOf="@id/card_actor"
-        app:layout_constraintTop_toBottomOf="@id/card_actor" />
+        app:layout_constraintTop_toBottomOf="@id/card_actor"
+        tools:text="@string/downey"
+        tools:textColor="@color/white"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
