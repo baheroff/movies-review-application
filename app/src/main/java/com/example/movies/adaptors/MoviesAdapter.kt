@@ -13,21 +13,24 @@ import com.example.movies.R
 import com.example.movies.viewmodels.MoviesListViewModel
 import com.google.android.material.card.MaterialCardView
 
-class MoviesAdapter(context: Context,
-                    var movies: List<Movie>,
-                    private val viewModel: MoviesListViewModel
+class MoviesAdapter(
+    context: Context,
+    var movies: List<Movie>,
+    private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
     ): MovieViewHolder {
         return MovieViewHolder(inflater.inflate(R.layout.view_holder_movie, parent, false))
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder,
-                                  position: Int
+    override fun onBindViewHolder(
+        holder: MovieViewHolder,
+        position: Int
     ) {
         holder.bind(getItem(position), viewModel)
     }
@@ -49,8 +52,9 @@ class MovieViewHolder(
     private val pg: ImageView = itemView.findViewById(R.id.pg)
     private val image: ImageView = itemView.findViewById(R.id.card_picture)
 
-   fun bind(movie: Movie,
-            viewModel: MoviesListViewModel
+   fun bind(
+       movie: Movie,
+       viewModel: MoviesListViewModel
    ) {
        title.text = movie.title
        releaseDate.text = context.getString(R.string.release_date, movie.releaseDate)
