@@ -1,6 +1,7 @@
 package com.example.movies.adaptors
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.data.Movie
 import com.example.movies.R
+import com.example.movies.database.MovieEntity
 import com.example.movies.viewmodels.MoviesListViewModel
 import com.google.android.material.card.MaterialCardView
 
 class MoviesAdapter(
     context: Context,
-    var movies: List<Movie>,
+    var movies: List<MovieEntity>,
     private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<MovieViewHolder>() {
 
@@ -37,7 +39,7 @@ class MoviesAdapter(
 
     override fun getItemCount(): Int = movies.size
 
-    private fun getItem(position: Int): Movie = movies[position]
+    private fun getItem(position: Int): MovieEntity = movies[position]
 
 }
 
@@ -53,19 +55,16 @@ class MovieViewHolder(
     private val image: ImageView = itemView.findViewById(R.id.card_picture)
 
    fun bind(
-       movie: Movie,
+       movie: MovieEntity,
        viewModel: MoviesListViewModel
    ) {
+
        title.text = movie.title
        releaseDate.text = context.getString(R.string.release_date, movie.releaseDate)
        reviews.text = context.getString(R.string.movie_num_reviews, movie.reviewCount)
-       genre.text = movie.genresIds.joinToString { id ->
-           viewModel.genres.find {
-               it.id == id
-           }?.name.toString()
-       }
+       genre.text = movie.genres
 
-       pg.load(if (movie.pgAge) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
+       pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
 
        image.load(viewModel.baseImageUrl
                       + "original"
@@ -75,7 +74,7 @@ class MovieViewHolder(
        }
 
        itemView.findViewById<MaterialCardView>(R.id.card).setOnClickListener {
-           viewModel.onItemClicked(movie)
+           viewModel.onItemClicked(movie.id)
        }
    }
 

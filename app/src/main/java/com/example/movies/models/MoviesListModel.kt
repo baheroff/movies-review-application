@@ -1,6 +1,8 @@
 package com.example.movies.models
 
-import com.example.movies.R
+import com.example.movies.MoviesCategories
+import com.example.movies.Result
+import com.example.movies.data.Actor
 import com.example.movies.data.Genre
 import com.example.movies.data.Movie
 import com.example.movies.network.NetworkModule
@@ -11,14 +13,13 @@ class MoviesListModel {
 
     private val moviesApiService = NetworkModule()
 
-    suspend fun loadMovies(chipId: Int): List<Movie> = withContext(Dispatchers.IO) {
-
-        when (chipId) {
-            R.id.now_play_categ_chip -> moviesApiService.moviesApi
+    suspend fun loadMovies(category: MoviesCategories): List<Movie> = withContext(Dispatchers.IO) {
+        when (category) {
+            MoviesCategories.NOW_PLAYING -> moviesApiService.moviesApi
                                             .getNowPlayingMovies(moviesApiService.apiKey).moviesList
-            R.id.upcoming_categ_chip -> moviesApiService.moviesApi
+            MoviesCategories.UPCOMING -> moviesApiService.moviesApi
                                             .getUpcomingMovies(moviesApiService.apiKey).moviesList
-            R.id.top_rated_categ_chip -> moviesApiService.moviesApi
+            MoviesCategories.TOP_RATED -> moviesApiService.moviesApi
                                             .getTopRatedMovies(moviesApiService.apiKey).moviesList
             else -> moviesApiService.moviesApi
                         .getPopularMovies(moviesApiService.apiKey).moviesList
@@ -34,4 +35,7 @@ class MoviesListModel {
         moviesApiService.moviesApi.getGenres(moviesApiService.apiKey).genres
     }
 
+    suspend fun loadActors(movieId: Int): List<Actor> = withContext(Dispatchers.IO) {
+        moviesApiService.moviesApi.getActors(movieId, moviesApiService.apiKey).moviesCast
+    }
 }

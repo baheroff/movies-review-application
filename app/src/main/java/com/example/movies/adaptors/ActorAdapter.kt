@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.data.Actor
 import com.example.movies.R
+import com.example.movies.database.ActorEntity
+import com.example.movies.viewmodels.MoviesDetailsViewModel
 import com.example.movies.viewmodels.MoviesListViewModel
 
 class ActorAdapter(
     context: Context,
-    var actors: List<Actor>,
-    private val viewModel: MoviesListViewModel
+    var actors: List<ActorEntity>,
+    private val baseImageUrl: String
 ) : RecyclerView.Adapter<ActorViewHolder>()
 {
 
@@ -32,7 +34,7 @@ class ActorAdapter(
         holder: ActorViewHolder,
         position: Int
     ) {
-        holder.bind(getItem(position), viewModel)
+        holder.bind(getItem(position), baseImageUrl)
     }
 
     override fun getItemCount(): Int = actors.size
@@ -49,10 +51,10 @@ class ActorViewHolder(
     private val name: TextView = view.findViewById(R.id.name)
 
     fun bind(
-        actor: Actor,
-        viewModel: MoviesListViewModel
+        actor: ActorEntity,
+        baseImageUrl: String
     ){
-        avatar.load(viewModel.baseImageUrl
+        avatar.load(baseImageUrl
                     + "original"
                     + actor.imageUrl
         ) {

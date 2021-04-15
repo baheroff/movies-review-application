@@ -2,8 +2,10 @@ package com.example.movies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelStoreOwner
+import com.example.movies.data.Genre
 import com.example.movies.data.Movie
 import com.example.movies.fragments.FragmentMovieDetails
 import com.example.movies.fragments.FragmentMoviesList
@@ -23,21 +25,26 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
 
         if(savedInstanceState == null) {
-            FragmentMoviesList().apply {
-                supportFragmentManager.beginTransaction()
-                        .add(R.id.main_container, this, MOVIES_LIST)
-                        .commit()
-            }
+            supportFragmentManager.beginTransaction()
+                .add(R.id.main_container, FragmentMoviesList.newInstance(), MOVIES_LIST)
+                .commit()
         }
     }
 
-    override fun onItemClicked() {
-        FragmentMovieDetails().apply {
+    override fun onItemClicked(
+        movieId: Long?
+    ) {
+        Log.e("TAGAT", "MAIN ACTIVITY ${movieId}")
+        if (movieId != null) {
             supportFragmentManager.beginTransaction()
-                    .add(R.id.main_container, this, MOVIE_DETAILS_TAG)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack(MOVIE_DETAILS_TAG)
-                    .commit()
+                .add(
+                    R.id.main_container,
+                    FragmentMovieDetails.newInstance(movieId),
+                    MOVIE_DETAILS_TAG
+                )
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(MOVIE_DETAILS_TAG)
+                .commit()
         }
     }
 
