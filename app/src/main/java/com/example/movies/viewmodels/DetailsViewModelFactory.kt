@@ -1,15 +1,20 @@
 package com.example.movies.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.movies.MoviesApp
+import com.example.movies.data.Genre
+import com.example.movies.data.Movie
 
-class ViewModelFactory (
-    private val context: Context
+@Suppress("UNCHECKED_CAST")
+class DetailsViewModelFactory(
+    private val movieId: Long?
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
-        MoviesListViewModel::class.java -> MoviesListViewModel()
+        MoviesDetailsViewModel::class.java -> {
+            MoviesDetailsViewModel(MoviesApp.getRepository(), movieId)
+        }
         else -> throw IllegalArgumentException("$modelClass is not registered ViewModel")
     } as T
 }

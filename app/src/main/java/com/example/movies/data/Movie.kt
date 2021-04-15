@@ -14,7 +14,7 @@ data class Movie(
         @SerialName("id")
         val id: Int,
         @SerialName("adult")
-        val pgAge: Boolean,
+        val isAdult: Boolean,
         @SerialName("title")
         val title: String,
         @SerialName("genre_ids")

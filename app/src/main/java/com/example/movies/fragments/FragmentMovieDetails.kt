@@ -12,17 +12,17 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.adaptors.ActorAdapter
 import com.example.movies.R
-import com.example.movies.data.Actor
-import com.example.movies.data.Movie
+import com.example.movies.database.ActorEntity
+import com.example.movies.database.MovieEntity
+import com.example.movies.viewmodels.DetailsViewModelFactory
 import com.example.movies.viewmodels.MoviesDetailsViewModel
-import com.example.movies.viewmodels.MoviesListViewModel
 
 class FragmentMovieDetails : Fragment() {
 
     private var backTransaction: BackTransaction? = null
-    private val listViewModel: MoviesListViewModel by activityViewModels()
-    private val viewModel: MoviesDetailsViewModel by lazy {
-        MoviesDetailsViewModel(listViewModel.movieDetailsToOpen.id)
+
+    private val viewModel: MoviesDetailsViewModel by viewModels {
+        DetailsViewModelFactory(arguments?.getLong("id"))
     }
 
     private var backgroundPicture: ImageView? = null
@@ -45,11 +45,11 @@ class FragmentMovieDetails : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
-        defineViewsContent(listViewModel.movieDetailsToOpen)
         setUpListeners()
 
-        viewModel.actorsList.observe(this.viewLifecycleOwner, this::setUpActorsAdapter)
-        viewModel.eventBackPressed.observe(this.viewLifecycleOwner, this::goToMainScreen)
+        viewModel.movie.observe(viewLifecycleOwner, this::defineViewsContent)
+        viewModel.actorsList.observe(viewLifecycleOwner, this::setUpActorsAdapter)
+        viewModel.eventBackPressed.observe(viewLifecycleOwner, this::goToMainScreen)
     }
 
     override fun onAttach(context: Context) {
@@ -82,28 +82,24 @@ class FragmentMovieDetails : Fragment() {
         recyclerActors = view.findViewById(R.id.actors_list)
     }
 
-    private fun defineViewsContent(movie: Movie) {
+    private fun defineViewsContent(movie: MovieEntity) {
 
-        backgroundPicture?.load(listViewModel.baseImageUrl
+        backgroundPicture?.load(viewModel.baseImageUrl
                                     + "original"
                                     + (movie.detailImageUrl ?: movie.imageUrl)
         ) {
             placeholder(R.drawable.loading_animation)
         }
         title?.text = movie.title
-        genres?.text = movie.genresIds.joinToString { id ->
-            listViewModel.genres.find {
-                it.id == id
-            }?.name.toString()
-        }
+        genres?.text = movie.genres
         reviews?.text = getString(R.string.movie_num_reviews,
                                   movie.reviewCount)
-        description?.text = movie.storyLine
+        description?.text = movie.storyline
     }
 
-    private fun setUpActorsAdapter(actors: List<Actor>) {
+    private fun setUpActorsAdapter(actors: List<ActorEntity>) {
         recyclerActors?.adapter = context?.let {
-            ActorAdapter(it, actors, listViewModel)
+            ActorAdapter(it, actors, viewModel.baseImageUrl)
         }
     }
 
@@ -126,4 +122,15 @@ class FragmentMovieDetails : Fragment() {
         fun backToMoviesList()
     }
 
+    companion object {
+        fun newInstance(
+            movieId: Long
+        ): FragmentMovieDetails {
+            val args = Bundle()
+            args.putLong("id", movieId)
+            val fragment = FragmentMovieDetails()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }
