@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(),
     override fun onItemClicked(
         movieId: Long?
     ) {
-        Log.e("TAGAT", "MAIN ACTIVITY ${movieId}")
         if (movieId != null) {
             supportFragmentManager.beginTransaction()
                 .add(
