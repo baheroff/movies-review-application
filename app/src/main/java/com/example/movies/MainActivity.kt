@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity(),
                     FragmentMovieDetails.newInstance(movieId),
                     MOVIE_DETAILS_TAG
                 )
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(MOVIE_DETAILS_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit()
         }
     }

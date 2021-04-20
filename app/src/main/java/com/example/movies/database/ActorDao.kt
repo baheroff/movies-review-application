@@ -13,7 +13,4 @@ interface ActorDao {
 
     @Query("SELECT * FROM actors WHERE movie_id = :movieId")
     suspend fun getAllByMovieId(movieId: Long?): List<ActorEntity>
-
-    @Query("DELETE FROM actors")
-    suspend fun deleteAll()
 }

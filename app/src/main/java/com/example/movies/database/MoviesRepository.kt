@@ -4,16 +4,12 @@ import com.example.movies.data.Actor
 import com.example.movies.data.Genre
 import com.example.movies.data.Movie
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class MoviesRepository(
     private val moviesDb: MoviesDatabase
 ) {
-
-    suspend fun deleteActors() = withContext(Dispatchers.IO) {
-        moviesDb.actorDao().deleteAll()
-    }
-
     suspend fun insertImageUrl(
         imageUrl: String
     ) = withContext(Dispatchers.IO) {
@@ -37,25 +33,24 @@ class MoviesRepository(
         moviesDb.actorDao().getAllByMovieId(movieId)
     }
 
-    suspend fun deleteAllMoviesByCategory(
-        category: String
-    ) = withContext(Dispatchers.IO) {
-        moviesDb.movieDao().deleteAll(category)
-    }
-
     suspend fun getMovieById(
         movieId: Long?
     ): MovieEntity = withContext(Dispatchers.IO) {
         moviesDb.movieDao().getMovieById(movieId)
     }
 
-    suspend fun insertAllMovies(
+    suspend fun updateAllMoviesByCategory(
         movies: List<Movie>,
         genres: List<Genre>,
         category: String
-    ) = withContext(Dispatchers.IO) {
-        moviesDb.movieDao().insertAll(movies.map { toMovieEntity(it, genres, category) })
+    ): List<Long> = withContext(Dispatchers.IO) {
+        moviesDb.movieDao().updateMovies(category, movies.map { toMovieEntity(it, genres, category) })
     }
+
+    fun getAllMoviesByCategoryFlow(
+        category: String
+    ): Flow<List<MovieEntity>> =
+        moviesDb.movieDao().getAllByCategoryFlow(category)
 
     suspend fun getAllMoviesByCategory(
         category: String

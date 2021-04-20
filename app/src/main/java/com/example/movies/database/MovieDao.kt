@@ -1,9 +1,7 @@
 package com.example.movies.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
@@ -14,9 +12,21 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE category = :category")
     suspend fun getAllByCategory(category: String): List<MovieEntity>
 
+    @Query("SELECT * FROM movies WHERE category = :category")
+    fun getAllByCategoryFlow(category: String): Flow<List<MovieEntity>>
+
     @Query("SELECT * FROM movies WHERE id = :movieId LIMIT 1")
     suspend fun getMovieById(movieId: Long?): MovieEntity
 
     @Query("DELETE FROM movies WHERE category = :category")
     suspend fun deleteAll(category: String)
+
+    @Transaction
+    suspend fun updateMovies(
+        category: String,
+        movies: List<MovieEntity>
+    ): List<Long> {
+        deleteAll(category)
+        return insertAll(movies)
+    }
 }

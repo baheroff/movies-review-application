@@ -1,10 +1,7 @@
 package com.example.movies.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.movies.MoviesCategories
 import com.example.movies.R
 import com.example.movies.data.Genre
@@ -12,6 +9,8 @@ import com.example.movies.database.MovieEntity
 import com.example.movies.database.MoviesRepository
 import com.example.movies.models.MoviesListModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(
@@ -21,16 +20,21 @@ class MoviesListViewModel(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e("TAG", "Network/db problem: ", throwable)
+        _errorFound.value = true
     }
 
-    private var currentCategory: MoviesCategories = MoviesCategories.NOW_PLAYING
+    private var currentCategory = MutableStateFlow(MoviesCategories.NOW_PLAYING)
 
     private lateinit var _genres: List<Genre>
     private lateinit var _baseImageUrl: String
     private var _movieDetailsToOpen: Long? = null
 
+    private val _errorFound = MutableLiveData<Boolean>()
     private val _eventItemClicked = MutableLiveData<Boolean>()
-    private val _moviesList = MutableLiveData<List<MovieEntity>>()
+    private val _moviesList: LiveData<List<MovieEntity>> = currentCategory
+        .flatMapLatest { category ->
+            repository.getAllMoviesByCategoryFlow(category.toString())
+        }.asLiveData()
 
     val genres: List<Genre>
         get() = _genres
@@ -44,14 +48,23 @@ class MoviesListViewModel(
     val eventItemClicked: LiveData<Boolean>
         get() = _eventItemClicked
 
+    val errorFound: LiveData<Boolean>
+        get() = _errorFound
+
     val moviesList: LiveData<List<MovieEntity>>
         get() = _moviesList
 
     init {
         loadGenres()
         loadBaseImageUrl()
-        loadMovies(MoviesCategories.NOW_PLAYING)
-        loadMoviesAndActorsFromNetwork()
+    }
+
+    fun reload() {
+        loadMoviesWithActorsByCategory(currentCategory.value)
+    }
+
+    fun errorHandled() {
+        _errorFound.value = false
     }
 
     fun onItemClicked(movieId: Long?) {
@@ -64,38 +77,22 @@ class MoviesListViewModel(
     }
 
     fun chipChecked(checkedId: Int) {
-        currentCategory = when (checkedId) {
+        currentCategory.value = when (checkedId) {
             R.id.popular_categ_chip -> MoviesCategories.POPULAR
             R.id.top_rated_categ_chip -> MoviesCategories.TOP_RATED
             R.id.upcoming_categ_chip -> MoviesCategories.UPCOMING
             else -> MoviesCategories.NOW_PLAYING
         }
-        loadMovies(currentCategory)
     }
 
-    private fun loadMovies(category: MoviesCategories) {
+    private fun loadMoviesWithActorsByCategory(category: MoviesCategories) {
         viewModelScope.launch(exceptionHandler) {
-            val moviesLocal = repository.getAllMoviesByCategory(category.toString())
+            val moviesRemote = moviesListModel.loadMovies(category)
+            val moviesIds = repository.updateAllMoviesByCategory(moviesRemote, _genres, category.toString())
 
-            if (moviesLocal.isNotEmpty()) {
-                _moviesList.value = moviesLocal
+            for ((i, movie) in moviesRemote.withIndex()) {
+                repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
             }
-        }
-    }
-
-    private fun loadMoviesAndActorsFromNetwork() {
-        viewModelScope.launch(exceptionHandler) {
-            for (category in MoviesCategories.values()) {
-                val moviesRemote = moviesListModel.loadMovies(category)
-
-                repository.deleteAllMoviesByCategory(category.toString())
-                val moviesIds = repository.insertAllMovies(moviesRemote, _genres, category.toString())
-
-                for ((i, movie) in moviesRemote.withIndex()) {
-                    repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
-                }
-            }
-            _moviesList.setValue(repository.getAllMoviesByCategory(currentCategory.toString()))
         }
     }
 
