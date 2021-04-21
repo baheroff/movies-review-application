@@ -5,49 +5,33 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.findNavController
 import com.example.movies.data.Genre
 import com.example.movies.data.Movie
 import com.example.movies.fragments.FragmentMovieDetails
 import com.example.movies.fragments.FragmentMoviesList
+import com.example.movies.fragments.FragmentMoviesListDirections
 
 class MainActivity : AppCompatActivity(),
                      FragmentMoviesList.OnItemClickListener,
                      FragmentMovieDetails.BackTransaction
 {
 
-    companion object{
-        const val MOVIE_DETAILS_TAG = "AVENGERS"
-        const val MOVIES_LIST = "MOVIES"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if(savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.main_container, FragmentMoviesList.newInstance(), MOVIES_LIST)
-                .commit()
-        }
     }
 
     override fun onItemClicked(
         movieId: Long?
     ) {
-        if (movieId != null) {
-            supportFragmentManager.beginTransaction()
-                .add(
-                    R.id.main_container,
-                    FragmentMovieDetails.newInstance(movieId),
-                    MOVIE_DETAILS_TAG
-                )
-                .addToBackStack(MOVIE_DETAILS_TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
-        }
+        findNavController(R.id.myNavHostFragment)
+            .navigate(FragmentMoviesListDirections.actionFragmentMoviesListToFragmentMovieDetails(
+                checkNotNull(movieId)
+            ))
     }
 
     override fun backToMoviesList() {
-        supportFragmentManager.popBackStack()
+        findNavController(R.id.myNavHostFragment).navigateUp()
     }
 }

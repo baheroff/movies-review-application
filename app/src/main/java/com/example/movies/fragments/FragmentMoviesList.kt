@@ -105,8 +105,4 @@ class FragmentMoviesList : Fragment() {
     interface OnItemClickListener{
         fun onItemClicked(movieId: Long?)
     }
-
-    companion object {
-        fun newInstance(): FragmentMoviesList = FragmentMoviesList()
-    }
 }

@@ -1,7 +1,6 @@
 package com.example.movies.adaptors
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.movies.data.Movie
 import com.example.movies.R
 import com.example.movies.database.MovieEntity
 import com.example.movies.viewmodels.MoviesListViewModel
