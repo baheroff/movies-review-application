@@ -22,7 +22,7 @@ class FragmentMovieDetails : Fragment() {
     private var backTransaction: BackTransaction? = null
 
     private val viewModel: MoviesDetailsViewModel by viewModels {
-        DetailsViewModelFactory(arguments?.getLong("id"))
+        DetailsViewModelFactory(FragmentMovieDetailsArgs.fromBundle(requireArguments()).movieId)
     }
 
     private var backgroundPicture: ImageView? = null
@@ -120,17 +120,5 @@ class FragmentMovieDetails : Fragment() {
 
     interface BackTransaction{
         fun backToMoviesList()
-    }
-
-    companion object {
-        fun newInstance(
-            movieId: Long
-        ): FragmentMovieDetails {
-            val args = Bundle()
-            args.putLong("id", movieId)
-            val fragment = FragmentMovieDetails()
-            fragment.arguments = args
-            return fragment
-        }
     }
 }
