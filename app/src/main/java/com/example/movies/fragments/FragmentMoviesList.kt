@@ -43,6 +43,7 @@ class FragmentMoviesList : Fragment() {
         initViews(view)
         setUpListeners()
 
+        viewModel.isLoading.observe(viewLifecycleOwner, this::stopLoading)
         viewModel.moviesList.observe(viewLifecycleOwner, this::setUpMoviesListAdapter)
         viewModel.eventItemClicked.observe(viewLifecycleOwner, this::openMovieDetails)
         viewModel.errorFound.observe(viewLifecycleOwner, this::showToast)
@@ -82,13 +83,17 @@ class FragmentMoviesList : Fragment() {
         recyclerMovies?.adapter = context?.let {
             MoviesAdapter(it, movies, viewModel)
         }
-        refreshContainer?.isRefreshing = false
     }
 
     private fun showToast(errorFound: Boolean) {
         if (errorFound) {
-            Toast.makeText(requireContext(), "Reload failed", Toast.LENGTH_SHORT).show()
             viewModel.errorHandled()
+            Toast.makeText(requireContext(), "Reload failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun stopLoading(isLoading: Boolean) {
+        if (!isLoading) {
             refreshContainer?.isRefreshing = false
         }
     }

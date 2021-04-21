@@ -29,6 +29,7 @@ class MoviesListViewModel(
     private lateinit var _baseImageUrl: String
     private var _movieDetailsToOpen: Long? = null
 
+    private val _isLoading = MutableLiveData<Boolean>()
     private val _errorFound = MutableLiveData<Boolean>()
     private val _eventItemClicked = MutableLiveData<Boolean>()
     private val _moviesList: LiveData<List<MovieEntity>> = currentCategory
@@ -45,6 +46,9 @@ class MoviesListViewModel(
     val movieDetailsToOpen: Long?
         get() = _movieDetailsToOpen
 
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     val eventItemClicked: LiveData<Boolean>
         get() = _eventItemClicked
 
@@ -60,11 +64,13 @@ class MoviesListViewModel(
     }
 
     fun reload() {
+        _isLoading.value = true
         loadMoviesWithActorsByCategory(currentCategory.value)
     }
 
     fun errorHandled() {
         _errorFound.value = false
+        _isLoading.value = false
     }
 
     fun onItemClicked(movieId: Long?) {
@@ -86,12 +92,16 @@ class MoviesListViewModel(
     }
 
     private fun loadMoviesWithActorsByCategory(category: MoviesCategories) {
-        viewModelScope.launch(exceptionHandler) {
-            val moviesRemote = moviesListModel.loadMovies(category)
-            val moviesIds = repository.updateAllMoviesByCategory(moviesRemote, _genres, category.toString())
+        if (_isLoading.value == true) {
+            viewModelScope.launch(exceptionHandler) {
+                val moviesRemote = moviesListModel.loadMovies(category)
+                val moviesIds =
+                    repository.updateAllMoviesByCategory(moviesRemote, _genres, category.toString())
 
-            for ((i, movie) in moviesRemote.withIndex()) {
-                repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
+                for ((i, movie) in moviesRemote.withIndex()) {
+                    repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
+                }
+                _isLoading.value = false
             }
         }
     }
