@@ -76,7 +76,6 @@ class FragmentMoviesList : Fragment() {
     private fun initTabMediator() {
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.pager) {tab, position ->
             tab.text = MoviesCategories.values()[position].toString().replace("_", " ")
-            binding.pager.setCurrentItem(tab.position, true)
         }
     }
 
