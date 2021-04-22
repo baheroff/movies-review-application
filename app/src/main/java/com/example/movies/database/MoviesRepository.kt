@@ -47,10 +47,8 @@ class MoviesRepository(
         moviesDb.movieDao().updateMovies(category, movies.map { toMovieEntity(it, genres, category) })
     }
 
-    fun getAllMoviesByCategoryFlow(
-        category: String
-    ): Flow<List<MovieEntity>> =
-        moviesDb.movieDao().getAllByCategoryFlow(category)
+    fun getAllMoviesFlow(): Flow<List<MovieEntity>> =
+        moviesDb.movieDao().getAllFlow()
 
     suspend fun getAllMoviesByCategory(
         category: String

@@ -1,6 +1,5 @@
-package com.example.movies.adaptors
+package com.example.movies.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,26 +7,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.movies.data.Actor
 import com.example.movies.R
 import com.example.movies.database.ActorEntity
-import com.example.movies.viewmodels.MoviesDetailsViewModel
-import com.example.movies.viewmodels.MoviesListViewModel
 
 class ActorAdapter(
-    context: Context,
     var actors: List<ActorEntity>,
     private val baseImageUrl: String
 ) : RecyclerView.Adapter<ActorViewHolder>()
 {
 
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ActorViewHolder {
-        return ActorViewHolder(inflater.inflate(R.layout.view_holder_actor, parent, false))
+        return ActorViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_holder_actor, parent, false))
     }
 
     override fun onBindViewHolder(
@@ -65,6 +59,3 @@ class ActorViewHolder(
         name.text = actor.name
     }
 }
-
-private val RecyclerView.ViewHolder.context
-    get() = this.itemView.context

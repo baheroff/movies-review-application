@@ -1,6 +1,5 @@
-package com.example.movies.adaptors
+package com.example.movies.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,18 +13,20 @@ import com.example.movies.viewmodels.MoviesListViewModel
 import com.google.android.material.card.MaterialCardView
 
 class MoviesAdapter(
-    context: Context,
     var movies: List<MovieEntity>,
     private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<MovieViewHolder>() {
-
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): MovieViewHolder {
-        return MovieViewHolder(inflater.inflate(R.layout.view_holder_movie, parent, false))
+        return MovieViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_holder_movie, parent, false))
+    }
+
+    override fun onFailedToRecycleView(holder: MovieViewHolder): Boolean {
+        return true
     }
 
     override fun onBindViewHolder(
@@ -40,6 +41,9 @@ class MoviesAdapter(
     private fun getItem(position: Int): MovieEntity = movies[position]
 
 }
+
+const val rlsDate = "Release date: "
+const val numReviews = " REVIEWS"
 
 class MovieViewHolder(
     view: View
@@ -58,8 +62,8 @@ class MovieViewHolder(
    ) {
 
        title.text = movie.title
-       releaseDate.text = context.getString(R.string.release_date, movie.releaseDate)
-       reviews.text = context.getString(R.string.movie_num_reviews, movie.reviewCount)
+       releaseDate.text = rlsDate + movie.releaseDate//context.getString(R.string.release_date, movie.releaseDate)
+       reviews.text = movie.reviewCount.toString() + numReviews //context.getString(R.string.movie_num_reviews, movie.reviewCount)
        genre.text = movie.genres
 
        pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
@@ -77,6 +81,3 @@ class MovieViewHolder(
    }
 
 }
-
-private val RecyclerView.ViewHolder.context
-    get() = this.itemView.context

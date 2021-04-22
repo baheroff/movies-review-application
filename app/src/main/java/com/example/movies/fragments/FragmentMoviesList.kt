@@ -8,39 +8,43 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.movies.adaptors.MoviesAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.example.movies.MoviesCategories
 import com.example.movies.R
+import com.example.movies.adapters.ViewPagerAdapter
 import com.example.movies.database.MovieEntity
+import com.example.movies.databinding.FragmentMoviesListBinding
 import com.example.movies.viewmodels.MoviesListViewModel
 import com.example.movies.viewmodels.ListViewModelFactory
-import com.google.android.material.chip.ChipGroup
+import com.google.android.material.tabs.TabLayoutMediator
 
 class FragmentMoviesList : Fragment() {
+
+    private lateinit var binding: FragmentMoviesListBinding
 
     private val viewModel: MoviesListViewModel by viewModels{
         ListViewModelFactory()
     }
 
-    private var refreshContainer: SwipeRefreshLayout? = null
-    private var recyclerMovies: RecyclerView? = null
-    private var chipsGroup: ChipGroup? = null
+    private lateinit var tabMediator: TabLayoutMediator
 
     private var onItemClickListener: OnItemClickListener? = null
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_movies_list, container, false)
+    ): View {
+        binding = FragmentMoviesListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View,
                                savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews(view)
+        initTabMediator()
         setUpListeners()
 
         viewModel.isLoading.observe(viewLifecycleOwner, this::stopLoading)
@@ -59,17 +63,7 @@ class FragmentMoviesList : Fragment() {
     override fun onDetach() {
         super.onDetach()
         onItemClickListener = null
-        recyclerMovies?.adapter = null
-        recyclerMovies = null
-        chipsGroup = null
-        refreshContainer = null
-    }
-
-    private fun initViews(view: View) {
-        recyclerMovies = view.findViewById(R.id.moviesList)
-        chipsGroup = view.findViewById(R.id.movies_categories)
-        refreshContainer = view.findViewById(R.id.refreshContainer)
-        refreshContainer?.setProgressBackgroundColorSchemeResource(R.color.highlight_red_color)
+        binding.pager.adapter = null
     }
 
     private fun openMovieDetails(isClicked: Boolean) {
@@ -79,32 +73,42 @@ class FragmentMoviesList : Fragment() {
         }
     }
 
+    private fun initTabMediator() {
+        tabMediator = TabLayoutMediator(binding.tabLayout, binding.pager) {tab, position ->
+            tab.text = MoviesCategories.values()[position].toString().replace("_", " ")
+            binding.pager.setCurrentItem(tab.position, true)
+        }
+    }
+
     private fun setUpMoviesListAdapter(movies: List<MovieEntity>) {
-        recyclerMovies?.adapter = context?.let {
-            MoviesAdapter(it, movies, viewModel)
+        if (!tabMediator.isAttached) {
+            binding.pager.adapter = ViewPagerAdapter(movies, viewModel)
+            tabMediator.attach()
         }
     }
 
     private fun showToast(errorFound: Boolean) {
         if (errorFound) {
             viewModel.errorHandled()
-            Toast.makeText(requireContext(), "Reload failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Load failed", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun stopLoading(isLoading: Boolean) {
         if (!isLoading) {
-            refreshContainer?.isRefreshing = false
+            binding.pager.findViewById<SwipeRefreshLayout>(R.id.refreshContainer)?.apply {
+                isRefreshing = false
+            }
         }
     }
 
     private fun setUpListeners() {
-        chipsGroup?.setOnCheckedChangeListener { _, checkedId ->
-            viewModel.chipChecked(checkedId)
-        }
-        refreshContainer?.setOnRefreshListener {
-            viewModel.reload()
-        }
+        binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                viewModel.pageSelected(MoviesCategories.values()[position])
+            }
+        })
     }
 
     interface OnItemClickListener{
