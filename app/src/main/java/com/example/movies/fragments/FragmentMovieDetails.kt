@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.*
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.movies.adaptors.ActorAdapter
+import com.example.movies.adapters.ActorAdapter
 import com.example.movies.R
 import com.example.movies.database.ActorEntity
 import com.example.movies.database.MovieEntity
@@ -98,9 +98,7 @@ class FragmentMovieDetails : Fragment() {
     }
 
     private fun setUpActorsAdapter(actors: List<ActorEntity>) {
-        recyclerActors?.adapter = context?.let {
-            ActorAdapter(it, actors, viewModel.baseImageUrl)
-        }
+        recyclerActors?.adapter = ActorAdapter(actors, viewModel.baseImageUrl)
     }
 
     private fun setUpListeners() {

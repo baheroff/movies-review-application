@@ -30,91 +30,31 @@
         app:layout_constraintStart_toEndOf="@+id/geo_sign"
         app:layout_constraintTop_toTopOf="@+id/geo_sign" />
 
-    <HorizontalScrollView
-        android:id="@+id/category_scroll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:layout_marginTop="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:scrollbars="none"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/geo_sign">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/movies_categories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleLine="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/now_play_categ_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/now_playing"
-                android:checked="true"
-                android:textColor="@color/black"
-                app:checkedIconVisible="true"
-                app:chipBackgroundColor="@color/selected_highlight" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/upcoming_categ_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/upcoming"
-                android:textColor="@color/black"
-                app:checkedIconVisible="true"
-                app:chipBackgroundColor="@color/selected_highlight" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/popular_categ_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/popular"
-                android:textColor="@color/black"
-                app:checkedIconVisible="true"
-                app:chipBackgroundColor="@color/selected_highlight" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/top_rated_categ_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/top_rated"
-                android:textColor="@color/black"
-                app:checkedIconVisible="true"
-                app:chipBackgroundColor="@color/selected_highlight" />
-        </com.google.android.material.chip.ChipGroup>
-    </HorizontalScrollView>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refreshContainer"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_scroll">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/moviesList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="8dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_scroll"
-        app:spanCount="2"
-        tools:listitem="@layout/view_holder_movie">
-    </androidx.recyclerview.widget.RecyclerView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        app:layout_constraintTop_toBottomOf="@id/geo_sign"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            app:tabMode="scrollable"
+            android:background="@color/main_background_color"
+            app:tabSelectedTextColor="@color/highlight_red_color"
+            app:tabIndicatorColor="@color/highlight_red_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

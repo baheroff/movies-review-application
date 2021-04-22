@@ -3,14 +3,12 @@ package com.example.movies.viewmodels
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movies.MoviesCategories
-import com.example.movies.R
 import com.example.movies.data.Genre
 import com.example.movies.database.MovieEntity
 import com.example.movies.database.MoviesRepository
 import com.example.movies.models.MoviesListModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(
@@ -32,10 +30,9 @@ class MoviesListViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     private val _errorFound = MutableLiveData<Boolean>()
     private val _eventItemClicked = MutableLiveData<Boolean>()
-    private val _moviesList: LiveData<List<MovieEntity>> = currentCategory
-        .flatMapLatest { category ->
-            repository.getAllMoviesByCategoryFlow(category.toString())
-        }.asLiveData()
+    private val _moviesList: LiveData<List<MovieEntity>> = repository
+                                                            .getAllMoviesFlow()
+                                                            .asLiveData()
 
     val genres: List<Genre>
         get() = _genres
@@ -82,13 +79,8 @@ class MoviesListViewModel(
         _eventItemClicked.value = false
     }
 
-    fun chipChecked(checkedId: Int) {
-        currentCategory.value = when (checkedId) {
-            R.id.popular_categ_chip -> MoviesCategories.POPULAR
-            R.id.top_rated_categ_chip -> MoviesCategories.TOP_RATED
-            R.id.upcoming_categ_chip -> MoviesCategories.UPCOMING
-            else -> MoviesCategories.NOW_PLAYING
-        }
+    fun pageSelected(category: MoviesCategories) {
+        currentCategory.value = category
     }
 
     private fun loadMoviesWithActorsByCategory(category: MoviesCategories) {

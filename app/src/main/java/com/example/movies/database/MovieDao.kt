@@ -12,8 +12,8 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE category = :category")
     suspend fun getAllByCategory(category: String): List<MovieEntity>
 
-    @Query("SELECT * FROM movies WHERE category = :category")
-    fun getAllByCategoryFlow(category: String): Flow<List<MovieEntity>>
+    @Query("SELECT * FROM movies")
+    fun getAllFlow(): Flow<List<MovieEntity>>
 
     @Query("SELECT * FROM movies WHERE id = :movieId LIMIT 1")
     suspend fun getMovieById(movieId: Long?): MovieEntity
