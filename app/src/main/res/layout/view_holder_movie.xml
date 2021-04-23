@@ -29,12 +29,14 @@
                 android:id="@+id/card_picture"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:adjustViewBounds="true"
                 android:foreground="@drawable/ic_background_gradient"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/star_1"
-                tools:src="@drawable/avengers_card_background"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                tools:layout_editor_absoluteX="-50dp"
+                tools:src="@drawable/avengers_card_background" />
 
             <ImageView
                 android:id="@+id/like"
@@ -45,8 +47,7 @@
                 android:src="@drawable/ic_like"
                 app:layout_constraintTop_toTopOf="@id/pg"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/pg"
-                app:tint="@color/white" />
+                app:layout_constraintBottom_toBottomOf="@id/pg"/>
 
             <ImageView
                 android:id="@+id/pg"

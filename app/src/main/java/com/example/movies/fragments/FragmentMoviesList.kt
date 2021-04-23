@@ -63,7 +63,6 @@ class FragmentMoviesList : Fragment() {
     override fun onDetach() {
         super.onDetach()
         onItemClickListener = null
-        binding.pager.adapter = null
     }
 
     private fun openMovieDetails(isClicked: Boolean) {

@@ -1,14 +1,12 @@
 package com.example.movies.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.R
 import com.example.movies.database.ActorEntity
+import com.example.movies.databinding.ViewHolderActorBinding
 
 class ActorAdapter(
     var actors: List<ActorEntity>,
@@ -20,8 +18,12 @@ class ActorAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ActorViewHolder {
-        return ActorViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.view_holder_actor, parent, false))
+        val binding = ViewHolderActorBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ActorViewHolder(binding)
     }
 
     override fun onBindViewHolder(
@@ -38,17 +40,14 @@ class ActorAdapter(
 }
 
 class ActorViewHolder(
-    view: View
-) : RecyclerView.ViewHolder(view){
-
-    private val avatar: ImageView = view.findViewById(R.id.avatar)
-    private val name: TextView = view.findViewById(R.id.name)
+    private val binding: ViewHolderActorBinding
+) : RecyclerView.ViewHolder(binding.root){
 
     fun bind(
         actor: ActorEntity,
         baseImageUrl: String
     ){
-        avatar.load(baseImageUrl
+        binding.avatar.load(baseImageUrl
                     + "original"
                     + actor.imageUrl
         ) {
@@ -56,6 +55,6 @@ class ActorViewHolder(
             error(R.drawable.ic_actors_avatar_missing)
         }
 
-        name.text = actor.name
+        binding.name.text = actor.name
     }
 }

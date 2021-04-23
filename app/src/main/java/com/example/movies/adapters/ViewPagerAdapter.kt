@@ -1,13 +1,12 @@
 package com.example.movies.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.movies.MoviesCategories
 import com.example.movies.R
 import com.example.movies.database.MovieEntity
+import com.example.movies.databinding.ViewpagerHolderBinding
 import com.example.movies.viewmodels.MoviesListViewModel
 
 class ViewPagerAdapter(
@@ -19,10 +18,12 @@ class ViewPagerAdapter(
         parent: ViewGroup,
         viewType: Int
     ): PagerViewHolder {
-        return PagerViewHolder(LayoutInflater.from(parent.context)
-                                    .inflate(R.layout.viewpager_holder, parent, false),
-                               movies,
-                               viewModel)
+        val binding = ViewpagerHolderBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return PagerViewHolder(binding, movies, viewModel)
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
@@ -36,27 +37,25 @@ class ViewPagerAdapter(
 }
 
 class PagerViewHolder(
-    view: View,
+    private val binding: ViewpagerHolderBinding,
     movies: List<MovieEntity>,
     viewModel: MoviesListViewModel
-) : RecyclerView.ViewHolder(view) {
+) : RecyclerView.ViewHolder(binding.root) {
 
-    private val recyclerView: RecyclerView = itemView.findViewById(R.id.moviesList)
-    private val refreshLayout: SwipeRefreshLayout = itemView.findViewById(R.id.refreshContainer)
    // private val adapter = MoviesAdapter(movies, viewModel)
 
     init {
-        refreshLayout.setProgressBackgroundColorSchemeResource(R.color.highlight_red_color)
+        binding.refreshContainer.setProgressBackgroundColorSchemeResource(R.color.highlight_red_color)
     }
 
     fun bind(
         movies: List<MovieEntity>,
         viewModel: MoviesListViewModel
     ) {
-        recyclerView.adapter = MoviesAdapter(movies, viewModel)
+        binding.moviesList.adapter = MoviesAdapter(movies, viewModel)
         //adapter.movies = movies
         //adapter.notifyDataSetChanged()
-        refreshLayout.setOnRefreshListener {
+        binding.refreshContainer.setOnRefreshListener {
             viewModel.reload()
         }
     }

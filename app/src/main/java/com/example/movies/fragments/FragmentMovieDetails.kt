@@ -5,19 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.*
-import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.adapters.ActorAdapter
 import com.example.movies.R
 import com.example.movies.database.ActorEntity
 import com.example.movies.database.MovieEntity
+import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.viewmodels.DetailsViewModelFactory
 import com.example.movies.viewmodels.MoviesDetailsViewModel
 
 class FragmentMovieDetails : Fragment() {
+
+    private lateinit var binding: FragmentMovieDetailsBinding
 
     private var backTransaction: BackTransaction? = null
 
@@ -25,26 +26,19 @@ class FragmentMovieDetails : Fragment() {
         DetailsViewModelFactory(FragmentMovieDetailsArgs.fromBundle(requireArguments()).movieId)
     }
 
-    private var backgroundPicture: ImageView? = null
-    private var age: TextView? = null
-    private var title: TextView? = null
-    private var genres: TextView? = null
-    private var reviews: TextView? = null
-    private var description: TextView? = null
-    private var recyclerActors: RecyclerView? = null
-
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_movie_details, container, false)
+    ): View {
+        binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View,
                                savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews(view)
         setUpListeners()
 
         viewModel.movie.observe(viewLifecycleOwner, this::defineViewsContent)
@@ -62,50 +56,30 @@ class FragmentMovieDetails : Fragment() {
     override fun onDetach() {
         super.onDetach()
         backTransaction = null
-        backgroundPicture = null
-        age = null
-        title = null
-        genres = null
-        reviews = null
-        description = null
-        recyclerActors?.adapter = null
-        recyclerActors = null
-    }
-
-    private fun initViews(view: View) {
-        backgroundPicture = view.findViewById(R.id.back_pict)
-        age = view.findViewById(R.id.age)
-        title = view.findViewById(R.id.film)
-        genres = view.findViewById(R.id.tag)
-        reviews = view.findViewById(R.id.movie_reviews)
-        description = view.findViewById(R.id.description)
-        recyclerActors = view.findViewById(R.id.actors_list)
     }
 
     private fun defineViewsContent(movie: MovieEntity) {
 
-        backgroundPicture?.load(viewModel.baseImageUrl
+        binding.backPicture.load(viewModel.baseImageUrl
                                     + "original"
                                     + (movie.detailImageUrl ?: movie.imageUrl)
         ) {
             placeholder(R.drawable.loading_animation)
         }
-        title?.text = movie.title
-        genres?.text = movie.genres
-        reviews?.text = getString(R.string.movie_num_reviews,
+        binding.filmTitle.text = movie.title
+        binding.movieGenres.text = movie.genres
+        binding.movieReviews.text = getString(R.string.movie_num_reviews,
                                   movie.reviewCount)
-        description?.text = movie.storyline
+        binding.description.text = movie.storyline
     }
 
     private fun setUpActorsAdapter(actors: List<ActorEntity>) {
-        recyclerActors?.adapter = ActorAdapter(actors, viewModel.baseImageUrl)
+        binding.recylerActorsList.adapter = ActorAdapter(actors, viewModel.baseImageUrl)
     }
 
     private fun setUpListeners() {
-        view?.findViewById<TextView>(R.id.back)?.apply {
-            setOnClickListener {
-                viewModel.onBackPressed()
-            }
+        binding.back.setOnClickListener {
+            viewModel.onBackPressed()
         }
     }
 
