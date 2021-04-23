@@ -12,13 +12,13 @@
         android:background="@color/main_background_color">
 
         <ImageView
-            android:id="@+id/back_pict"
+            android:id="@+id/back_picture"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:foreground="@drawable/ic_background_gradient"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@id/tag"
+            app:layout_constraintBottom_toTopOf="@id/movie_genres"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/avengers_background_picture"/>
 
@@ -65,23 +65,23 @@
             android:text="@string/avengers_pg"
             android:textColor="@color/white"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/film"
+            app:layout_constraintBottom_toTopOf="@+id/film_title"
             app:layout_constraintStart_toStartOf="@id/cast" />
 
         <TextView
-            android:id="@+id/film"
+            android:id="@+id/film_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="40sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tag"
+            app:layout_constraintBottom_toTopOf="@id/movie_genres"
             app:layout_constraintStart_toStartOf="@id/cast"
             app:layout_constraintEnd_toEndOf="@id/like"
             tools:text="@string/avengers_film"/>
 
         <TextView
-            android:id="@+id/tag"
+            android:id="@+id/movie_genres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -176,11 +176,11 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toTopOf="@id/actors_list"
-            app:layout_constraintStart_toStartOf="@id/actors_list" />
+            app:layout_constraintBottom_toTopOf="@id/recyler_actors_list"
+            app:layout_constraintStart_toStartOf="@id/recyler_actors_list" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/actors_list"
+            android:id="@+id/recyler_actors_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

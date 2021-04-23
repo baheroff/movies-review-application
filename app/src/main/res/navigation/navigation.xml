@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_movies_list">
         <action
             android:id="@+id/action_fragmentMoviesList_to_fragmentMovieDetails"
-            app:destination="@id/fragmentMovieDetails"/>
+            app:destination="@id/fragmentMovieDetails"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovieDetails"

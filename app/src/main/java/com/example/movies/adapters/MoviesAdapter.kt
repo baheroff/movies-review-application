@@ -1,14 +1,17 @@
 package com.example.movies.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.R
 import com.example.movies.database.MovieEntity
+import com.example.movies.databinding.ViewHolderMovieBinding
 import com.example.movies.viewmodels.MoviesListViewModel
 import com.google.android.material.card.MaterialCardView
 
@@ -21,8 +24,12 @@ class MoviesAdapter(
         parent: ViewGroup,
         viewType: Int
     ): MovieViewHolder {
-        return MovieViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.view_holder_movie, parent, false))
+        val binding = ViewHolderMovieBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return MovieViewHolder(binding)
     }
 
     override fun onFailedToRecycleView(holder: MovieViewHolder): Boolean {
@@ -46,36 +53,30 @@ const val rlsDate = "Release date: "
 const val numReviews = " REVIEWS"
 
 class MovieViewHolder(
-    view: View
-) : RecyclerView.ViewHolder(view) {
+    private val binding: ViewHolderMovieBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
-    private val title: TextView = itemView.findViewById(R.id.movie_title)
-    private val releaseDate: TextView = itemView.findViewById(R.id.release_date)
-    private val reviews: TextView = itemView.findViewById(R.id.reviews)
-    private val genre: TextView = itemView.findViewById(R.id.genre)
-    private val pg: ImageView = itemView.findViewById(R.id.pg)
-    private val image: ImageView = itemView.findViewById(R.id.card_picture)
-
+   @SuppressLint("SetTextI18n")
    fun bind(
        movie: MovieEntity,
        viewModel: MoviesListViewModel
    ) {
 
-       title.text = movie.title
-       releaseDate.text = rlsDate + movie.releaseDate//context.getString(R.string.release_date, movie.releaseDate)
-       reviews.text = movie.reviewCount.toString() + numReviews //context.getString(R.string.movie_num_reviews, movie.reviewCount)
-       genre.text = movie.genres
+       binding.movieTitle.text = movie.title
+       binding.releaseDate.text = rlsDate + movie.releaseDate
+       binding.reviews.text = movie.reviewCount.toString() + numReviews
+       binding.genre.text = movie.genres
 
-       pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
+       binding.pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
 
-       image.load(viewModel.baseImageUrl
+       binding.cardPicture.load(viewModel.baseImageUrl
                       + "original"
                       + (movie.imageUrl ?: movie.detailImageUrl)
        ) {
-           placeholder(R.drawable.loading_animation)
+          placeholder(R.drawable.loading_animation)
        }
 
-       itemView.findViewById<MaterialCardView>(R.id.card).setOnClickListener {
+       binding.card.setOnClickListener {
            viewModel.onItemClicked(movie.id)
        }
    }
