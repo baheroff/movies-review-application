@@ -8,13 +8,11 @@
     android:layout_height="match_parent"
     tools:background="@color/main_background_color">
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/moviesList"
+        android:id="@+id/recycler_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="8dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
         tools:listitem="@layout/view_holder_movie">
     </androidx.recyclerview.widget.RecyclerView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

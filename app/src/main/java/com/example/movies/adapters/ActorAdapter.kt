@@ -33,6 +33,8 @@ class ActorAdapter(
         holder.bind(getItem(position), baseImageUrl)
     }
 
+    override fun onFailedToRecycleView(holder: ActorViewHolder): Boolean = false
+
     override fun getItemCount(): Int = actors.size
 
     private fun getItem(position: Int) = actors[position]
