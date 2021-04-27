@@ -9,8 +9,8 @@ import androidx.fragment.app.*
 import coil.load
 import com.example.movies.adapters.ActorAdapter
 import com.example.movies.R
-import com.example.movies.database.ActorEntity
-import com.example.movies.database.MovieEntity
+import com.example.movies.database.entities.ActorEntity
+import com.example.movies.database.entities.MovieEntity
 import com.example.movies.databinding.FragmentMovieDetailsBinding
 import com.example.movies.viewmodels.MoviesDetailsViewModel
 import com.example.movies.viewmodels.ViewModelFactory

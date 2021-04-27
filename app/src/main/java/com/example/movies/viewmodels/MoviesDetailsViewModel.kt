@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movies.database.ActorEntity
-import com.example.movies.database.MovieEntity
+import com.example.movies.database.entities.ActorEntity
+import com.example.movies.database.entities.MovieEntity
 import com.example.movies.database.MoviesRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch

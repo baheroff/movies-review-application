@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.R
-import com.example.movies.database.MovieEntity
+import com.example.movies.database.entities.MovieEntity
 import com.example.movies.databinding.ViewHolderMovieBinding
 import com.example.movies.viewmodels.MoviesListViewModel
 

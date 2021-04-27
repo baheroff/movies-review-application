@@ -1,7 +1,6 @@
 package com.example.movies.models
 
 import com.example.movies.MoviesCategories
-import com.example.movies.Result
 import com.example.movies.data.Actor
 import com.example.movies.data.Genre
 import com.example.movies.data.Movie

@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.example.movies.MoviesCategories
-import com.example.movies.R
 import com.example.movies.adapters.ViewPagerAdapter
-import com.example.movies.database.MovieEntity
+import com.example.movies.database.entities.MovieEntity
 import com.example.movies.databinding.FragmentMoviesListBinding
 import com.example.movies.viewmodels.MoviesListViewModel
 import com.example.movies.viewmodels.ViewModelFactory
@@ -28,7 +26,6 @@ class FragmentMoviesList : Fragment() {
     }
 
     private lateinit var tabMediator: TabLayoutMediator
-    private lateinit var adapterPager: ViewPagerAdapter
 
     private var onItemClickListener: OnItemClickListener? = null
 
@@ -48,7 +45,6 @@ class FragmentMoviesList : Fragment() {
         initTabMediator()
         setUpListeners()
 
-        viewModel.isLoading.observe(viewLifecycleOwner, this::stopLoading)
         viewModel.moviesList.observe(viewLifecycleOwner, this::setUpMoviesListAdapter)
         viewModel.eventItemClicked.observe(viewLifecycleOwner, this::openMovieDetails)
         viewModel.errorFound.observe(viewLifecycleOwner, this::showToast)
@@ -81,15 +77,12 @@ class FragmentMoviesList : Fragment() {
 
     private fun setUpMoviesListAdapter(movies: List<MovieEntity>) {
         if (!tabMediator.isAttached) {
-            adapterPager = ViewPagerAdapter(movies, viewModel)
             binding.pager.apply {
                 offscreenPageLimit = 2
-                adapter = adapterPager
+                adapter = ViewPagerAdapter(movies, viewModel)
             }
             tabMediator.attach()
             binding.progress.hide()
-        } else {
-            adapterPager.bindMovies(movies)
         }
     }
 
@@ -97,14 +90,6 @@ class FragmentMoviesList : Fragment() {
         if (errorFound) {
             viewModel.errorHandled()
             Toast.makeText(requireContext(), "Load failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun stopLoading(isLoading: Boolean) {
-        if (!isLoading) {
-            binding.pager.findViewById<SwipeRefreshLayout>(R.id.refreshContainer).apply {
-                isRefreshing = false
-            }
         }
     }
 

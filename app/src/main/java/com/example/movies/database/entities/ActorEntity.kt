@@ -1,7 +1,8 @@
-package com.example.movies.database
+package com.example.movies.database.entities
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.example.movies.database.DbContract
 
 @Entity(tableName = DbContract.Actors.TABLE_NAME,
         foreignKeys = [ForeignKey(

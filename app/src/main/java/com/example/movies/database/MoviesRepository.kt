@@ -3,6 +3,9 @@ package com.example.movies.database
 import com.example.movies.data.Actor
 import com.example.movies.data.Genre
 import com.example.movies.data.Movie
+import com.example.movies.database.entities.ActorEntity
+import com.example.movies.database.entities.ConfigurationEntity
+import com.example.movies.database.entities.MovieEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

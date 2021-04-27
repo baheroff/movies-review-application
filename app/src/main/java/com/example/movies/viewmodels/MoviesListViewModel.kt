@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.movies.MoviesCategories
 import com.example.movies.data.Genre
-import com.example.movies.database.MovieEntity
+import com.example.movies.database.entities.MovieEntity
 import com.example.movies.database.MoviesRepository
 import com.example.movies.models.MoviesListModel
 import kotlinx.coroutines.CoroutineExceptionHandler
