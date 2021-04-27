@@ -8,7 +8,6 @@ import com.example.movies.database.MovieEntity
 import com.example.movies.database.MoviesRepository
 import com.example.movies.models.MoviesListModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(
@@ -21,7 +20,7 @@ class MoviesListViewModel(
         _errorFound.value = true
     }
 
-    private var currentCategory = MutableStateFlow(MoviesCategories.NOW_PLAYING)
+    private var _currentCategory = MoviesCategories.NOW_PLAYING
 
     private lateinit var _genres: List<Genre>
     private lateinit var _baseImageUrl: String
@@ -55,6 +54,9 @@ class MoviesListViewModel(
     val moviesList: LiveData<List<MovieEntity>>
         get() = _moviesList
 
+    val currentCategory: String
+        get() = _currentCategory.toString()
+
     init {
         loadGenres()
         loadBaseImageUrl()
@@ -62,7 +64,7 @@ class MoviesListViewModel(
 
     fun reload() {
         _isLoading.value = true
-        loadMoviesWithActorsByCategory(currentCategory.value)
+        loadMoviesWithActorsByCategory(_currentCategory)
     }
 
     fun errorHandled() {
@@ -80,7 +82,7 @@ class MoviesListViewModel(
     }
 
     fun pageSelected(category: MoviesCategories) {
-        currentCategory.value = category
+        _currentCategory = category
     }
 
     private fun loadMoviesWithActorsByCategory(category: MoviesCategories) {
