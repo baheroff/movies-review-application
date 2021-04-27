@@ -16,7 +16,7 @@ import com.example.movies.adapters.ViewPagerAdapter
 import com.example.movies.database.MovieEntity
 import com.example.movies.databinding.FragmentMoviesListBinding
 import com.example.movies.viewmodels.MoviesListViewModel
-import com.example.movies.viewmodels.ListViewModelFactory
+import com.example.movies.viewmodels.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 
 class FragmentMoviesList : Fragment() {
@@ -24,7 +24,7 @@ class FragmentMoviesList : Fragment() {
     private lateinit var binding: FragmentMoviesListBinding
 
     private val viewModel: MoviesListViewModel by viewModels{
-        ListViewModelFactory()
+        ViewModelFactory()
     }
 
     private lateinit var tabMediator: TabLayoutMediator
@@ -81,9 +81,11 @@ class FragmentMoviesList : Fragment() {
 
     private fun setUpMoviesListAdapter(movies: List<MovieEntity>) {
         if (!tabMediator.isAttached) {
-            binding.pager.offscreenPageLimit = 2
             adapterPager = ViewPagerAdapter(movies, viewModel)
-            binding.pager.adapter = adapterPager
+            binding.pager.apply {
+                offscreenPageLimit = 2
+                adapter = adapterPager
+            }
             tabMediator.attach()
             binding.progress.hide()
         } else {
