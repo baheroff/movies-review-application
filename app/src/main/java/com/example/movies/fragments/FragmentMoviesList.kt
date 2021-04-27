@@ -28,6 +28,7 @@ class FragmentMoviesList : Fragment() {
     }
 
     private lateinit var tabMediator: TabLayoutMediator
+    private lateinit var adapterPager: ViewPagerAdapter
 
     private var onItemClickListener: OnItemClickListener? = null
 
@@ -80,8 +81,13 @@ class FragmentMoviesList : Fragment() {
 
     private fun setUpMoviesListAdapter(movies: List<MovieEntity>) {
         if (!tabMediator.isAttached) {
-            binding.pager.adapter = ViewPagerAdapter(movies, viewModel)
+            binding.pager.offscreenPageLimit = 2
+            adapterPager = ViewPagerAdapter(movies, viewModel)
+            binding.pager.adapter = adapterPager
             tabMediator.attach()
+            binding.progress.hide()
+        } else {
+            adapterPager.bindMovies(movies)
         }
     }
 
@@ -94,7 +100,7 @@ class FragmentMoviesList : Fragment() {
 
     private fun stopLoading(isLoading: Boolean) {
         if (!isLoading) {
-            binding.pager.findViewById<SwipeRefreshLayout>(R.id.refreshContainer)?.apply {
+            binding.pager.findViewById<SwipeRefreshLayout>(R.id.refreshContainer).apply {
                 isRefreshing = false
             }
         }
@@ -103,7 +109,6 @@ class FragmentMoviesList : Fragment() {
     private fun setUpListeners() {
         binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
                 viewModel.pageSelected(MoviesCategories.values()[position])
             }
         })

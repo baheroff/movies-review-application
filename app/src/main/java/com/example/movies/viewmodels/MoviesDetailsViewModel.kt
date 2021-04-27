@@ -8,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.database.ActorEntity
 import com.example.movies.database.MovieEntity
 import com.example.movies.database.MoviesRepository
-import com.example.movies.models.MoviesDetailsModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class MoviesDetailsViewModel(

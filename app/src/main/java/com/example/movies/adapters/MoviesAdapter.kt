@@ -1,7 +1,6 @@
 package com.example.movies.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,13 +11,9 @@ import com.example.movies.databinding.ViewHolderMovieBinding
 import com.example.movies.viewmodels.MoviesListViewModel
 
 class MoviesAdapter(
-    var movies: List<MovieEntity>,
-    private val viewModel: MoviesListViewModel,
-    private val viewPool: RecyclerView.RecycledViewPool
+    private var movies: List<MovieEntity>,
+    private val viewModel: MoviesListViewModel
 ) : RecyclerView.Adapter<MovieViewHolder>() {
-
-    // Just for logs
-    private var count = 0
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,14 +25,8 @@ class MoviesAdapter(
             parent,
             false
         )
-        Log.e("MOVIESVIEWHOLDER CREATED", "${viewType}")
-        count++
-        Log.e("Count", "${count}")
-        return MovieViewHolder(binding)
-    }
 
-    override fun onViewRecycled(holder: MovieViewHolder) {
-        Log.e("PoolSize", "${viewPool.getRecycledViewCount(ITEM_MOVIE_TYPE)} -> ${holder.itemViewType}")
+        return MovieViewHolder(binding)
     }
 
     override fun onBindViewHolder(
@@ -52,6 +41,10 @@ class MoviesAdapter(
     override fun getItemCount(): Int = movies.size
 
     private fun getItem(position: Int): MovieEntity = movies[position]
+
+    fun bindMovies(newMovies: List<MovieEntity>) {
+        movies = newMovies
+    }
 
 }
 

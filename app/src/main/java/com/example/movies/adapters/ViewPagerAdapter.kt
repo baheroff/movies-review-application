@@ -13,7 +13,7 @@ import com.example.movies.viewmodels.MoviesListViewModel
 const val ITEM_MOVIE_TYPE = 0
 const val MAX_RECYCLED_VIEWS = 16
 const val SPAN_COUNT = 2
-const val INITIAL_ITEM_COUNT = 6
+const val INITIAL_ITEM_COUNT = 8
 
 class ViewPagerAdapter(
     private var movies: List<MovieEntity>,
@@ -39,16 +39,26 @@ class ViewPagerAdapter(
             recycleChildrenOnDetach = true
         }
 
-        binding.recyclerMovies.setRecycledViewPool(viewPool)
-        binding.recyclerMovies.setHasFixedSize(true)
-        binding.recyclerMovies.layoutManager = gridLayoutManager
+        binding.recyclerMovies.apply {
+            layoutManager = gridLayoutManager
+            setRecycledViewPool(viewPool)
+            setHasFixedSize(true)
+        }
 
-        return PagerViewHolder(binding, viewPool, movies, viewModel)
+        return PagerViewHolder(
+            binding,
+            movies.filter { it.category == viewModel.currentCategory },
+            viewModel
+        )
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         val item = getItem(position).toString()
-        holder.bind(movies.filter { it.category == item }, viewModel)
+        holder.bind(movies.filter { it.category == item })
+    }
+
+    fun bindMovies(newMovies: List<MovieEntity>) {
+        movies = newMovies
     }
 
     override fun onFailedToRecycleView(holder: PagerViewHolder): Boolean = true
@@ -56,20 +66,21 @@ class ViewPagerAdapter(
     override fun getItemCount(): Int = MoviesCategories.values().size
 
     private fun getItem(position: Int): MoviesCategories = MoviesCategories.values()[position]
+
 }
 
 class PagerViewHolder(
     binding: ViewpagerHolderBinding,
-    viewPool: RecyclerView.RecycledViewPool,
-    movies: List<MovieEntity>,
-    viewModel: MoviesListViewModel
+    currMovies: List<MovieEntity>,
+    private val viewModel: MoviesListViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val moviesAdapter = MoviesAdapter(movies, viewModel, viewPool)
+    private val moviesAdapter = MoviesAdapter(currMovies, viewModel)
 
     init {
         binding.refreshContainer
             .setProgressBackgroundColorSchemeResource(R.color.highlight_red_color)
+
         binding.refreshContainer.setOnRefreshListener {
             viewModel.reload()
         }
@@ -77,9 +88,8 @@ class PagerViewHolder(
     }
 
     fun bind(
-        movies: List<MovieEntity>,
-        viewModel: MoviesListViewModel
+        movies: List<MovieEntity>
     ) {
-        moviesAdapter.movies = movies
+        moviesAdapter.bindMovies(movies)
     }
 }

@@ -7,36 +7,28 @@
     android:layout_height="match_parent"
     android:background="@color/main_background_color">
 
-    <ImageView
-        android:id="@+id/geo_sign"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/ic_combined_shape"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/location"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/movies_title"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/geo_sign"
-        app:layout_constraintStart_toEndOf="@+id/geo_sign"
-        app:layout_constraintTop_toTopOf="@+id/geo_sign" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/geo_sign"
+        app:layout_constraintTop_toBottomOf="@id/location"
         android:orientation="vertical">
 
         <com.google.android.material.tabs.TabLayout
@@ -55,6 +47,17 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:theme="@style/CustomProgressBarStyle"
+        app:layout_constraintTop_toBottomOf="@id/location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
