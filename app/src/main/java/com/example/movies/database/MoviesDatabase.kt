@@ -4,6 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.movies.database.dao.ActorDao
+import com.example.movies.database.dao.ConfigurationDao
+import com.example.movies.database.dao.MovieDao
+import com.example.movies.database.entities.ActorEntity
+import com.example.movies.database.entities.ConfigurationEntity
+import com.example.movies.database.entities.MovieEntity
 
 @Database(entities = [MovieEntity::class,
                       ActorEntity::class,

@@ -1,7 +1,7 @@
 package com.example.movies.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.movies.database.MovieEntity
+import com.example.movies.database.entities.MovieEntity
 
 class MoviesDiffUtilCallback(
     private val oldList: List<MovieEntity>,

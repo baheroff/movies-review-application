@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movies.R
-import com.example.movies.database.ActorEntity
+import com.example.movies.database.entities.ActorEntity
 import com.example.movies.databinding.ViewHolderActorBinding
 
 class ActorAdapter(
