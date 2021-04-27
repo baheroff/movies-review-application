@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.*
 import coil.load
 import com.example.movies.adapters.ActorAdapter
@@ -13,8 +12,8 @@ import com.example.movies.R
 import com.example.movies.database.ActorEntity
 import com.example.movies.database.MovieEntity
 import com.example.movies.databinding.FragmentMovieDetailsBinding
-import com.example.movies.viewmodels.DetailsViewModelFactory
 import com.example.movies.viewmodels.MoviesDetailsViewModel
+import com.example.movies.viewmodels.ViewModelFactory
 
 class FragmentMovieDetails : Fragment() {
 
@@ -23,7 +22,7 @@ class FragmentMovieDetails : Fragment() {
     private var backTransaction: BackTransaction? = null
 
     private val viewModel: MoviesDetailsViewModel by viewModels {
-        DetailsViewModelFactory(FragmentMovieDetailsArgs.fromBundle(requireArguments()).movieId)
+        ViewModelFactory(FragmentMovieDetailsArgs.fromBundle(requireArguments()).movieId)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
