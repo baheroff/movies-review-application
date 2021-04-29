@@ -30,8 +30,9 @@ class MoviesListViewModel(
     private val _errorFound = MutableLiveData<Boolean>()
     private val _eventItemClicked = MutableLiveData<Boolean>()
     private val _moviesList: LiveData<List<MovieEntity>> = repository
-                                                            .getAllMoviesFlow()
-                                                            .asLiveData()
+        .getAllMoviesFlow()
+        .asLiveData()
+
 
     val genres: List<Genre>
         get() = _genres

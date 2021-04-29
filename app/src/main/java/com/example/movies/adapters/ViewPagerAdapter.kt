@@ -28,8 +28,6 @@ class ViewPagerAdapter(
         setMaxRecycledViews(ITEM_MOVIE_TYPE, MAX_RECYCLED_VIEWS)
     }
 
-    private var countCategories = 0
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -55,21 +53,21 @@ class ViewPagerAdapter(
             setRecycledViewPool(viewPool)
             setHasFixedSize(true)
         }
-        val category = MoviesCategories.values()[countCategories]
-        countCategories++
 
         return PagerViewHolder(
             binding,
-            movies.filter { it.category == category.toString() },
             viewModel,
-            category.toString(),
             parent.findFragment<FragmentMoviesList>().viewLifecycleOwner
         )
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         val item = getItem(position).toString()
-        holder.bind(movies.filter { it.category == item })
+        holder.bind(
+            movies.filter { it.category == item },
+            viewModel,
+            item
+        )
     }
 
     override fun onFailedToRecycleView(holder: PagerViewHolder): Boolean = true
@@ -82,13 +80,13 @@ class ViewPagerAdapter(
 
 class PagerViewHolder(
     private val binding: ViewpagerHolderBinding,
-    private var currMovies: List<MovieEntity>,
     private val viewModel: MoviesListViewModel,
-    private val category: String,
-    owner: LifecycleOwner
+    private val owner: LifecycleOwner
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val moviesAdapter = MoviesAdapter(currMovies, viewModel)
+    private lateinit var moviesAdapter: MoviesAdapter
+    private lateinit var currMovies: List<MovieEntity>
+    private lateinit var categoryOfPage: String
 
     init {
         binding.refreshContainer.apply {
@@ -97,20 +95,24 @@ class PagerViewHolder(
                 viewModel.reload()
             }
         }
+    }
+
+    fun bind(
+        movies: List<MovieEntity>,
+        viewModel: MoviesListViewModel,
+        category: String
+    ) {
+        moviesAdapter = MoviesAdapter(movies, viewModel)
         binding.recyclerMovies.adapter = moviesAdapter
+        currMovies = movies
+        categoryOfPage = category
         viewModel.moviesList.observe(owner, this::updateList)
         viewModel.isLoading.observe(owner, this::stopLoading)
     }
 
-    fun bind(
-        movies: List<MovieEntity>
-    ) {
-        moviesAdapter.bindMovies(movies)
-    }
-
     private fun updateList(newMoviesList: List<MovieEntity>) {
-        if (viewModel.currentCategory == category) {
-            val newMovies = newMoviesList.filter { it.category == category }
+        if (viewModel.currentCategory == categoryOfPage) {
+            val newMovies = newMoviesList.filter { it.category == categoryOfPage }
             moviesAdapter.bindMovies(newMovies)
             val diffCallback = MoviesDiffUtilCallback(currMovies, newMovies)
             val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
