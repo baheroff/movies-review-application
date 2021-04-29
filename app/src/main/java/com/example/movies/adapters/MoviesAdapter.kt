@@ -25,7 +25,6 @@ class MoviesAdapter(
             parent,
             false
         )
-
         return MovieViewHolder(binding)
     }
 
@@ -71,7 +70,7 @@ class MovieViewHolder(
                       + "original"
                       + (movie.imageUrl ?: movie.detailImageUrl)
        ) {
-          placeholder(R.drawable.loading_animation)
+           placeholder(R.drawable.loading_animation)
        }
 
        binding.card.setOnClickListener {

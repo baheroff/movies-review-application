@@ -78,7 +78,7 @@ class FragmentMoviesList : Fragment() {
     private fun setUpMoviesListAdapter(movies: List<MovieEntity>) {
         if (!tabMediator.isAttached) {
             binding.pager.apply {
-                offscreenPageLimit = 2
+                offscreenPageLimit = 4
                 adapter = ViewPagerAdapter(movies, viewModel)
             }
             tabMediator.attach()
@@ -89,7 +89,7 @@ class FragmentMoviesList : Fragment() {
     private fun showToast(errorFound: Boolean) {
         if (errorFound) {
             viewModel.errorHandled()
-            Toast.makeText(requireContext(), "Load failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), " Data load failed, swipe down to reload", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -103,5 +103,9 @@ class FragmentMoviesList : Fragment() {
 
     interface OnItemClickListener{
         fun onItemClicked(movieId: Long?)
+    }
+
+    companion object {
+        fun newInstance(): FragmentMoviesList = FragmentMoviesList()
     }
 }
