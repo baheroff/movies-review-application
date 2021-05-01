@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="@id/star_1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
-            tools:src="@drawable/avengers_card_background" />
+            tools:src="@tools:sample/backgrounds/scenic" />
 
         <ImageView
             android:id="@+id/like"
@@ -82,7 +82,7 @@
             android:id="@+id/star_1"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@id/card_picture"
             app:layout_constraintStart_toStartOf="@id/pg" />
 
@@ -90,7 +90,7 @@
             android:id="@+id/star_2"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@id/star_1"
             app:layout_constraintStart_toEndOf="@id/star_1" />
 
@@ -98,7 +98,7 @@
             android:id="@+id/star_3"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@id/star_1"
             app:layout_constraintStart_toEndOf="@id/star_2" />
 
@@ -106,7 +106,7 @@
             android:id="@+id/star_4"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@id/star_1"
             app:layout_constraintStart_toEndOf="@id/star_3" />
 

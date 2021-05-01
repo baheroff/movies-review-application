@@ -32,12 +32,6 @@ interface TheMovieApiService {
         @Query("api_key") apiKey: String
     ): MoviesList
 
-    @GET("movie/{movie_id}")
-    suspend fun getMoviesDetails(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String
-    ): Movie
-
     @GET("movie/{movie_id}/credits")
     suspend fun getActors(
         @Path("movie_id") movieId: Int,

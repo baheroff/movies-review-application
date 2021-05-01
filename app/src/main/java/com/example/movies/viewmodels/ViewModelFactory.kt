@@ -12,16 +12,10 @@ class ViewModelFactory(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
         MoviesListViewModel::class.java -> {
-            MoviesListViewModel(
-                MoviesApp.getRepository(),
-                MoviesListModel()
-            )
+            MoviesListViewModel(MoviesApp.getRepository(), MoviesListModel())
         }
         MoviesDetailsViewModel::class.java -> {
-            MoviesDetailsViewModel(
-                MoviesApp.getRepository(),
-                movieId.first()
-            )
+            MoviesDetailsViewModel(MoviesApp.getRepository(), movieId.first())
         }
         else -> throw IllegalArgumentException("$modelClass is not registered ViewModel")
     } as T

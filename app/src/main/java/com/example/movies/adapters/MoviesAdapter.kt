@@ -66,6 +66,28 @@ class MovieViewHolder(
 
        binding.pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
 
+       when (movie.rating) {
+           1 -> { binding.star1.load(R.drawable.ic_star_icon) }
+
+           2 -> { binding.star1.load(R.drawable.ic_star_icon)
+               binding.star2.load(R.drawable.ic_star_icon) }
+
+           3 -> { binding.star1.load(R.drawable.ic_star_icon)
+               binding.star2.load(R.drawable.ic_star_icon)
+               binding.star3.load(R.drawable.ic_star_icon) }
+
+           4 -> { binding.star1.load(R.drawable.ic_star_icon)
+               binding.star2.load(R.drawable.ic_star_icon)
+               binding.star3.load(R.drawable.ic_star_icon)
+               binding.star4.load(R.drawable.ic_star_icon) }
+
+           5 -> { binding.star1.load(R.drawable.ic_star_icon)
+               binding.star2.load(R.drawable.ic_star_icon)
+               binding.star3.load(R.drawable.ic_star_icon)
+               binding.star4.load(R.drawable.ic_star_icon)
+               binding.star5.load(R.drawable.ic_star_icon) }
+       }
+
        binding.cardPicture.load(viewModel.baseImageUrl
                       + "original"
                       + (movie.imageUrl ?: movie.detailImageUrl)

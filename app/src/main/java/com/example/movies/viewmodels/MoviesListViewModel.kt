@@ -7,8 +7,7 @@ import com.example.movies.data.Genre
 import com.example.movies.database.entities.MovieEntity
 import com.example.movies.database.MoviesRepository
 import com.example.movies.models.MoviesListModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MoviesListViewModel(
     private val repository: MoviesRepository,
@@ -22,20 +21,15 @@ class MoviesListViewModel(
 
     private var _currentCategory = MoviesCategories.NOW_PLAYING
 
-    private lateinit var _genres: List<Genre>
+    private lateinit var genres: List<Genre>
     private lateinit var _baseImageUrl: String
     private var _movieDetailsToOpen: Long? = null
 
     private val _isLoading = MutableLiveData<Boolean>()
     private val _errorFound = MutableLiveData<Boolean>()
     private val _eventItemClicked = MutableLiveData<Boolean>()
-    private val _moviesList: LiveData<List<MovieEntity>> = repository
-        .getAllMoviesFlow()
-        .asLiveData()
 
-
-    val genres: List<Genre>
-        get() = _genres
+    private val _moviesList = MutableLiveData<List<MovieEntity>>()
 
     val baseImageUrl: String
         get() = _baseImageUrl
@@ -59,13 +53,32 @@ class MoviesListViewModel(
         get() = _currentCategory.toString()
 
     init {
-        loadGenres()
-        loadBaseImageUrl()
+        viewModelScope.launch(exceptionHandler) {
+            supervisorScope {
+                launch { loadBaseImageUrl() }
+                launch { loadGenres() }
+            }
+            val movies = repository.getAllMovies()
+            if (movies.isEmpty()) {
+                _isLoading.value = true
+                for (category in MoviesCategories.values()) {
+                    loadMoviesWithActorsByCategory(category)
+                }
+                _moviesList.value = repository.getAllMovies()
+                _isLoading.value = false
+            } else {
+                _moviesList.value = movies
+            }
+        }
     }
 
     fun reload() {
         _isLoading.value = true
-        loadMoviesWithActorsByCategory(_currentCategory)
+        viewModelScope.launch(exceptionHandler) {
+            loadMoviesWithActorsByCategory(_currentCategory)
+            _moviesList.value = repository.getAllMovies()
+            _isLoading.value = false
+        }
     }
 
     fun errorHandled() {
@@ -86,38 +99,36 @@ class MoviesListViewModel(
         _currentCategory = category
     }
 
-    private fun loadMoviesWithActorsByCategory(category: MoviesCategories) {
-        if (_isLoading.value == true) {
-            viewModelScope.launch(exceptionHandler) {
-                val moviesRemote = moviesListModel.loadMovies(category)
-                val moviesIds =
-                    repository.updateAllMoviesByCategory(moviesRemote, _genres, category.toString())
+    private suspend fun loadMoviesWithActorsByCategory(category: MoviesCategories) = withContext(Dispatchers.IO) {
+        val moviesRemote = moviesListModel.loadMovies(category)
+        val moviesIds =
+            repository.updateAllMoviesByCategory(moviesRemote, genres, category.toString())
 
-                for ((i, movie) in moviesRemote.withIndex()) {
-                    repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
-                }
-                _isLoading.value = false
-            }
+        for ((i, movie) in moviesRemote.withIndex()) {
+            repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
         }
     }
 
-    private fun loadBaseImageUrl() {
-        viewModelScope.launch(exceptionHandler) {
-            val imageUrl = repository.getBaseImageUrl()
+    private suspend fun loadBaseImageUrl() = withContext(Dispatchers.IO) {
 
-            if (!imageUrl.isNullOrEmpty()) {
-                _baseImageUrl = imageUrl
-            }
+        val imageUrl = repository.getBaseImageUrl()
 
-            val imageUrlRemote = moviesListModel.loadBaseImageUrl()
-            repository.insertImageUrl(imageUrlRemote)
-            _baseImageUrl = imageUrlRemote
+        if (!imageUrl.isNullOrEmpty()) {
+            _baseImageUrl = imageUrl
         }
+
+        val imageUrlRemote = moviesListModel.loadBaseImageUrl()
+
+        repository.insertImageUrl(imageUrlRemote)
+        _baseImageUrl = imageUrlRemote
     }
 
-    private fun loadGenres() {
-        viewModelScope.launch(exceptionHandler) {
-            _genres = moviesListModel.loadGenres()
+    private suspend fun loadGenres() = withContext(Dispatchers.IO) {
+
+        val genresRemote = moviesListModel.loadGenres()
+
+        if (!genresRemote.isNullOrEmpty()) {
+            genres = genresRemote
         }
     }
 }
