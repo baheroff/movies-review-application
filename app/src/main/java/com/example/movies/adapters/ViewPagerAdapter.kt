@@ -17,7 +17,7 @@ import com.example.movies.viewmodels.MoviesListViewModel
 
 const val ITEM_MOVIE_TYPE = 0
 const val MAX_RECYCLED_VIEWS = 16
-const val INITIAL_ITEM_COUNT = 8
+const val INITIAL_ITEM_COUNT = 32
 
 class ViewPagerAdapter(
     private var movies: List<MovieEntity>,
@@ -32,6 +32,7 @@ class ViewPagerAdapter(
         parent: ViewGroup,
         viewType: Int
     ): PagerViewHolder {
+
         val binding = ViewpagerHolderBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
