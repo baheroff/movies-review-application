@@ -25,16 +25,18 @@ class FragmentMovieDetails : Fragment() {
         ViewModelFactory(arguments?.getLong("id"))
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View,
-                               savedInstanceState: Bundle?
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,6 +67,30 @@ class FragmentMovieDetails : Fragment() {
         ) {
             placeholder(R.drawable.loading_animation)
         }
+
+        when (movie.rating) {
+            1 -> { binding.star1.load(R.drawable.ic_star_icon) }
+
+            2 -> { binding.star1.load(R.drawable.ic_star_icon)
+                binding.star2.load(R.drawable.ic_star_icon) }
+
+            3 -> { binding.star1.load(R.drawable.ic_star_icon)
+                binding.star2.load(R.drawable.ic_star_icon)
+                binding.star3.load(R.drawable.ic_star_icon) }
+
+            4 -> { binding.star1.load(R.drawable.ic_star_icon)
+                binding.star2.load(R.drawable.ic_star_icon)
+                binding.star3.load(R.drawable.ic_star_icon)
+                binding.star4.load(R.drawable.ic_star_icon) }
+
+            5 -> { binding.star1.load(R.drawable.ic_star_icon)
+                binding.star2.load(R.drawable.ic_star_icon)
+                binding.star3.load(R.drawable.ic_star_icon)
+                binding.star4.load(R.drawable.ic_star_icon)
+                binding.star5.load(R.drawable.ic_star_icon) }
+        }
+
+        binding.age.text = if (movie.isAdult) "16+" else "13+"
         binding.filmTitle.text = movie.title
         binding.movieGenres.text = movie.genres
         binding.movieReviews.text = getString(R.string.movie_num_reviews,
@@ -73,7 +99,7 @@ class FragmentMovieDetails : Fragment() {
     }
 
     private fun setUpActorsAdapter(actors: List<ActorEntity>) {
-        binding.recylerActorsList.adapter = ActorAdapter(actors, viewModel.baseImageUrl)
+        binding.recyclerActorsList.adapter = ActorAdapter(actors, viewModel.baseImageUrl)
     }
 
     private fun setUpListeners() {

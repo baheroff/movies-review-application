@@ -16,11 +16,13 @@ import com.example.movies.database.entities.MovieEntity
                       ConfigurationEntity::class],
           version = 1)
 abstract class MoviesDatabase : RoomDatabase() {
+
     abstract fun movieDao(): MovieDao
     abstract fun actorDao(): ActorDao
     abstract fun configurationDao(): ConfigurationDao
 
     companion object {
+
         private lateinit var INSTANCE: MoviesDatabase
 
         fun getDatabase(appContext: Context): MoviesDatabase {

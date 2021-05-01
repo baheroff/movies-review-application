@@ -111,8 +111,9 @@ class PagerViewHolder(
     }
 
     private fun updateList(newMoviesList: List<MovieEntity>) {
-        if (viewModel.currentCategory == categoryOfPage) {
-            val newMovies = newMoviesList.filter { it.category == categoryOfPage }
+
+        val newMovies = newMoviesList.filter { it.category == categoryOfPage }
+        if (viewModel.currentCategory == categoryOfPage || (newMovies.isNotEmpty() && currMovies.isEmpty())) {
             moviesAdapter.bindMovies(newMovies)
             val diffCallback = MoviesDiffUtilCallback(currMovies, newMovies)
             val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)

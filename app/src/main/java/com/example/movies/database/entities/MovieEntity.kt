@@ -27,7 +27,7 @@ data class MovieEntity(
     val reviewCount: Int,
 
     @ColumnInfo(name = DbContract.Movies.COLUMN_NAME_RATING)
-    val rating: Float,
+    val rating: Int,
 
     @ColumnInfo(name = DbContract.Movies.COLUMN_NAME_IMAGE_URL)
     val imageUrl: String?,

@@ -7,7 +7,6 @@ import com.example.movies.database.entities.ActorEntity
 import com.example.movies.database.entities.ConfigurationEntity
 import com.example.movies.database.entities.MovieEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class MoviesRepository(
@@ -50,13 +49,8 @@ class MoviesRepository(
         moviesDb.movieDao().updateMovies(category, movies.map { toMovieEntity(it, genres, category) })
     }
 
-    fun getAllMoviesFlow(): Flow<List<MovieEntity>> =
-        moviesDb.movieDao().getAllFlow()
-
-    suspend fun getAllMoviesByCategory(
-        category: String
-    ): List<MovieEntity> = withContext(Dispatchers.IO) {
-        moviesDb.movieDao().getAllByCategory(category)
+    suspend fun getAllMovies(): List<MovieEntity> = withContext(Dispatchers.IO) {
+        moviesDb.movieDao().getAll()
     }
 
     private fun toMovieEntity(
@@ -73,7 +67,7 @@ class MoviesRepository(
         },
         releaseDate = movie.releaseDate,
         reviewCount = movie.reviewCount,
-        rating = movie.rating,
+        rating = (movie.rating/2).toInt(),
         imageUrl = movie.imageUrl,
         detailImageUrl = movie.detailImageUrl,
         storyline = movie.storyLine,

@@ -20,7 +20,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/movie_genres"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/avengers_background_picture"/>
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
         <ImageView
             android:id="@+id/back_vector"
@@ -62,11 +62,11 @@
             android:id="@+id/age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/avengers_pg"
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/film_title"
-            app:layout_constraintStart_toStartOf="@id/cast" />
+            app:layout_constraintStart_toStartOf="@id/cast"
+            tools:text="@string/avengers_pg"/>
 
         <TextView
             android:id="@+id/film_title"
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="28dp"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toTopOf="@+id/storyline_label"
             app:layout_constraintStart_toStartOf="@id/cast" />
 
@@ -104,7 +104,7 @@
             android:id="@+id/star2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@+id/star1"
             app:layout_constraintStart_toEndOf="@id/star1" />
 
@@ -112,7 +112,7 @@
             android:id="@+id/star3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@+id/star1"
             app:layout_constraintStart_toEndOf="@+id/star2" />
 
@@ -120,7 +120,7 @@
             android:id="@+id/star4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_star_icon"
+            android:src="@drawable/ic_star_icon_dark"
             app:layout_constraintBottom_toBottomOf="@+id/star1"
             app:layout_constraintStart_toEndOf="@+id/star3" />
 
@@ -176,11 +176,11 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toTopOf="@id/recyler_actors_list"
-            app:layout_constraintStart_toStartOf="@id/recyler_actors_list" />
+            app:layout_constraintBottom_toTopOf="@id/recycler_actors_list"
+            app:layout_constraintStart_toStartOf="@id/recycler_actors_list" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyler_actors_list"
+            android:id="@+id/recycler_actors_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

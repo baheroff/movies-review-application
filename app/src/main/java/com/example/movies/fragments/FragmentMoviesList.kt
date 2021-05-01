@@ -29,23 +29,25 @@ class FragmentMoviesList : Fragment() {
 
     private var onItemClickListener: OnItemClickListener? = null
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentMoviesListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View,
-                               savedInstanceState: Bundle?
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
 
         initTabMediator()
         setUpListeners()
 
-        viewModel.moviesList.observe(viewLifecycleOwner, this::setUpMoviesListAdapter)
+        viewModel.moviesList.observe(viewLifecycleOwner, this::setUpViewPager)
         viewModel.eventItemClicked.observe(viewLifecycleOwner, this::openMovieDetails)
         viewModel.errorFound.observe(viewLifecycleOwner, this::showToast)
     }
@@ -75,10 +77,10 @@ class FragmentMoviesList : Fragment() {
         }
     }
 
-    private fun setUpMoviesListAdapter(movies: List<MovieEntity>) {
+    private fun setUpViewPager(movies: List<MovieEntity>) {
         if (!tabMediator.isAttached) {
             binding.pager.apply {
-                offscreenPageLimit = 4
+                offscreenPageLimit = 3
                 adapter = ViewPagerAdapter(movies, viewModel)
             }
             tabMediator.attach()

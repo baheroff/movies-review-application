@@ -9,7 +9,7 @@ import com.example.movies.database.entities.ActorEntity
 import com.example.movies.databinding.ViewHolderActorBinding
 
 class ActorAdapter(
-    var actors: List<ActorEntity>,
+    private val actors: List<ActorEntity>,
     private val baseImageUrl: String
 ) : RecyclerView.Adapter<ActorViewHolder>()
 {

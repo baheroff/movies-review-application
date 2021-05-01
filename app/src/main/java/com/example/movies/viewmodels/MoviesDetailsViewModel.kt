@@ -16,8 +16,6 @@ class MoviesDetailsViewModel(
     movieId: Long?
 ): ViewModel() {
 
-    // private val moviesDetailsModel: MoviesDetailsModel = MoviesDetailsModel(movieChosen.id)
-
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e("TAG", "Db problem: ", throwable)
     }
@@ -52,7 +50,7 @@ class MoviesDetailsViewModel(
         viewModelScope.launch(exceptionHandler) {
             baseImageUrl = repository.getBaseImageUrl()
 
-            _movie.setValue(repository.getMovieById(movieId))
+            _movie.value = repository.getMovieById(movieId)
             _actorsList.setValue(repository.getAllActorsByMovieId(movieId))
         }
     }
