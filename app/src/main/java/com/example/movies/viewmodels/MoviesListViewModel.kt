@@ -6,12 +6,10 @@ import com.example.movies.MoviesCategories
 import com.example.movies.data.Genre
 import com.example.movies.database.entities.MovieEntity
 import com.example.movies.database.MoviesRepository
-import com.example.movies.models.MoviesListModel
 import kotlinx.coroutines.*
 
 class MoviesListViewModel(
-    private val repository: MoviesRepository,
-    private val moviesListModel: MoviesListModel
+    private val repository: MoviesRepository
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -100,12 +98,12 @@ class MoviesListViewModel(
     }
 
     private suspend fun loadMoviesWithActorsByCategory(category: MoviesCategories) = withContext(Dispatchers.IO) {
-        val moviesRemote = moviesListModel.loadMovies(category)
+        val moviesRemote = repository.loadMovies(category)
         val moviesIds =
             repository.updateAllMoviesByCategory(moviesRemote, genres, category.toString())
 
         for ((i, movie) in moviesRemote.withIndex()) {
-            repository.insertAllActors(moviesListModel.loadActors(movie.id), moviesIds[i])
+            repository.insertAllActors(repository.loadActors(movie.id), moviesIds[i])
         }
     }
 
@@ -117,7 +115,7 @@ class MoviesListViewModel(
             _baseImageUrl = imageUrl
         }
 
-        val imageUrlRemote = moviesListModel.loadBaseImageUrl()
+        val imageUrlRemote = repository.loadBaseImageUrl()
 
         repository.insertImageUrl(imageUrlRemote)
         _baseImageUrl = imageUrlRemote
@@ -125,7 +123,7 @@ class MoviesListViewModel(
 
     private suspend fun loadGenres() = withContext(Dispatchers.IO) {
 
-        val genresRemote = moviesListModel.loadGenres()
+        val genresRemote = repository.loadGenres()
 
         if (!genresRemote.isNullOrEmpty()) {
             genres = genresRemote

@@ -112,7 +112,6 @@ class PagerViewHolder(
     }
 
     private fun updateList(newMoviesList: List<MovieEntity>) {
-
         val newMovies = newMoviesList.filter { it.category == categoryOfPage }
         if (viewModel.currentCategory == categoryOfPage || (newMovies.isNotEmpty() && currMovies.isEmpty())) {
             moviesAdapter.bindMovies(newMovies)
