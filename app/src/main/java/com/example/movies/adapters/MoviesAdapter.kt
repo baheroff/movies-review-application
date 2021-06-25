@@ -62,35 +62,36 @@ class MovieViewHolder(
         binding.star5,
     )
 
-   @SuppressLint("SetTextI18n")
-   fun bind(
-       movie: MovieEntity,
-       viewModel: MoviesListViewModel
-   ) {
-       binding.movieTitle.text = movie.title
-       binding.releaseDate.text = RELEASE_DATE_STRING + movie.releaseDate
-       binding.reviews.text = movie.reviewCount.toString() + NUM_REVIEWS_STRING
-       binding.genre.text = movie.genres
+    @SuppressLint("SetTextI18n")
+    fun bind(
+        movie: MovieEntity,
+        viewModel: MoviesListViewModel
+    ) {
+        binding.movieTitle.text = movie.title
+        binding.releaseDate.text = RELEASE_DATE_STRING + movie.releaseDate
+        binding.reviews.text = movie.reviewCount.toString() + NUM_REVIEWS_STRING
+        binding.genre.text = movie.genres
 
-       binding.pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
+        binding.pg.load(if (movie.isAdult) R.drawable.ic_pg_16 else R.drawable.ic_pg_13)
 
-       for (count in starViews.indices) {
-           if (count < movie.rating) {
-               starViews[count].load(R.drawable.ic_star_icon)
-           } else {
-               starViews[count].load(R.drawable.ic_star_icon_dark)
-           }
-       }
+        for (count in starViews.indices) {
+            if (count < movie.rating) {
+                starViews[count].load(R.drawable.ic_star_icon)
+            } else {
+                starViews[count].load(R.drawable.ic_star_icon_dark)
+            }
+        }
 
-       binding.cardPicture.load(viewModel.baseImageUrl
-                      + "original"
-                      + (movie.imageUrl ?: movie.detailImageUrl)
-       ) {
-           placeholder(R.drawable.loading_animation)
-       }
+        binding.cardPicture.load(
+            viewModel.baseImageUrl
+                    + "original"
+                    + (movie.imageUrl ?: movie.detailImageUrl)
+        ) {
+            placeholder(R.drawable.loading_animation)
+        }
 
-       binding.card.setOnClickListener {
-           viewModel.onItemClicked(movie.id)
-       }
-   }
+        binding.card.setOnClickListener {
+            viewModel.onItemClicked(movie.id)
+        }
+    }
 }

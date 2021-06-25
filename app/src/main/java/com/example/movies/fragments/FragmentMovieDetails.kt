@@ -42,14 +42,14 @@ class FragmentMovieDetails : Fragment() {
 
         setUpListeners()
 
-        viewModel.movie.observe(viewLifecycleOwner, this::defineViewsContent)
-        viewModel.actorsList.observe(viewLifecycleOwner, this::setUpActorsAdapter)
-        viewModel.eventBackPressed.observe(viewLifecycleOwner, this::goToMainScreen)
+        viewModel.movie.observe(viewLifecycleOwner, ::defineViewsContent)
+        viewModel.actorsList.observe(viewLifecycleOwner, ::setUpActorsAdapter)
+        viewModel.eventBackPressed.observe(viewLifecycleOwner, ::goToMainScreen)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is BackTransaction){
+        if (context is BackTransaction) {
             backTransaction = context
         }
     }
@@ -69,9 +69,10 @@ class FragmentMovieDetails : Fragment() {
             binding.star5,
         )
 
-        binding.backPicture.load(viewModel.baseImageUrl
-                                    + "original"
-                                    + (movie.detailImageUrl ?: movie.imageUrl)
+        binding.backPicture.load(
+            viewModel.baseImageUrl
+                    + "original"
+                    + (movie.detailImageUrl ?: movie.imageUrl)
         ) {
             placeholder(R.drawable.loading_animation)
         }
@@ -87,8 +88,10 @@ class FragmentMovieDetails : Fragment() {
         binding.age.text = if (movie.isAdult) "16+" else "13+"
         binding.filmTitle.text = movie.title
         binding.movieGenres.text = movie.genres
-        binding.movieReviews.text = getString(R.string.movie_num_reviews,
-                                  movie.reviewCount)
+        binding.movieReviews.text = getString(
+            R.string.movie_num_reviews,
+            movie.reviewCount
+        )
         binding.description.text = movie.storyline
     }
 
@@ -109,17 +112,16 @@ class FragmentMovieDetails : Fragment() {
         }
     }
 
-    interface BackTransaction{
+    interface BackTransaction {
         fun backToMoviesList()
     }
 
     companion object {
-        fun newInstance(movieId: Long): FragmentMovieDetails {
-            val args = Bundle()
-            args.putLong("id", movieId)
-            val fragment = FragmentMovieDetails()
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance(movieId: Long): FragmentMovieDetails =
+            FragmentMovieDetails().apply {
+                arguments = Bundle().apply {
+                    putLong("id", movieId)
+                }
+            }
     }
 }

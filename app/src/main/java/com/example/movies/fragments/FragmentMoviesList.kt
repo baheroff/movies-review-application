@@ -21,7 +21,7 @@ class FragmentMoviesList : Fragment() {
 
     private lateinit var binding: FragmentMoviesListBinding
 
-    private val viewModel: MoviesListViewModel by viewModels{
+    private val viewModel: MoviesListViewModel by viewModels {
         ViewModelFactory()
     }
 
@@ -47,14 +47,14 @@ class FragmentMoviesList : Fragment() {
         initTabMediator()
         setUpListeners()
 
-        viewModel.moviesList.observe(viewLifecycleOwner, this::setUpViewPager)
-        viewModel.eventItemClicked.observe(viewLifecycleOwner, this::openMovieDetails)
-        viewModel.errorFound.observe(viewLifecycleOwner, this::showToast)
+        viewModel.moviesList.observe(viewLifecycleOwner, ::setUpViewPager)
+        viewModel.eventItemClicked.observe(viewLifecycleOwner, ::openMovieDetails)
+        viewModel.errorFound.observe(viewLifecycleOwner, ::showToast)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is OnItemClickListener){
+        if (context is OnItemClickListener) {
             onItemClickListener = context
         }
     }
@@ -72,7 +72,7 @@ class FragmentMoviesList : Fragment() {
     }
 
     private fun initTabMediator() {
-        tabMediator = TabLayoutMediator(binding.tabLayout, binding.pager) {tab, position ->
+        tabMediator = TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             tab.text = MoviesCategories.values()[position].toString().replace("_", " ")
         }
     }
@@ -91,7 +91,11 @@ class FragmentMoviesList : Fragment() {
     private fun showToast(errorFound: Boolean) {
         if (errorFound) {
             viewModel.errorHandled()
-            Toast.makeText(requireContext(), " Data load failed, swipe down to reload", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                " Data load failed, swipe down to reload",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -103,7 +107,7 @@ class FragmentMoviesList : Fragment() {
         })
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onItemClicked(movieId: Long?)
     }
 

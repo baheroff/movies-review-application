@@ -49,7 +49,8 @@ class MoviesRepository(
         genres: List<Genre>,
         category: String
     ): List<Long> = withContext(Dispatchers.IO) {
-        moviesDb.movieDao().updateMovies(category, movies.map { toMovieEntity(it, genres, category) })
+        moviesDb.movieDao()
+            .updateMovies(category, movies.map { toMovieEntity(it, genres, category) })
     }
 
     suspend fun getAllMovies(): List<MovieEntity> = withContext(Dispatchers.IO) {
@@ -70,7 +71,7 @@ class MoviesRepository(
         },
         releaseDate = movie.releaseDate,
         reviewCount = movie.reviewCount,
-        rating = (movie.rating/2).toInt(),
+        rating = (movie.rating / 2).toInt(),
         imageUrl = movie.imageUrl,
         detailImageUrl = movie.detailImageUrl,
         storyline = movie.storyLine,

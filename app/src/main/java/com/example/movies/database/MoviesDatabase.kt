@@ -11,10 +11,10 @@ import com.example.movies.database.entities.ActorEntity
 import com.example.movies.database.entities.ConfigurationEntity
 import com.example.movies.database.entities.MovieEntity
 
-@Database(entities = [MovieEntity::class,
-                      ActorEntity::class,
-                      ConfigurationEntity::class],
-          version = 1)
+@Database(
+    entities = [MovieEntity::class, ActorEntity::class, ConfigurationEntity::class],
+    version = 1
+)
 abstract class MoviesDatabase : RoomDatabase() {
 
     abstract fun movieDao(): MovieDao

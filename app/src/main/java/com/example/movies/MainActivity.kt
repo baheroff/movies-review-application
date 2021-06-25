@@ -6,29 +6,26 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.movies.fragments.FragmentMovieDetails
 import com.example.movies.fragments.FragmentMoviesList
 
-const val MOVIE_DETAILS_TAG = "AVENGERS"
-const val MOVIES_LIST_TAG = "MOVIES"
+private const val MOVIE_DETAILS_TAG = "com.example.movies.TAG_DETAILS"
+private const val MOVIES_LIST_TAG = "com.example.movies.TAG_LIST"
 
 class MainActivity : AppCompatActivity(),
-                     FragmentMoviesList.OnItemClickListener,
-                     FragmentMovieDetails.BackTransaction
-{
+    FragmentMoviesList.OnItemClickListener,
+    FragmentMovieDetails.BackTransaction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.main_container, FragmentMoviesList.newInstance(), MOVIES_LIST_TAG)
-                .commit()
-        }
+        supportFragmentManager.takeIf { savedInstanceState == null }?.beginTransaction()
+            ?.add(R.id.main_container, FragmentMoviesList.newInstance(), MOVIES_LIST_TAG)
+            ?.commit()
     }
 
     override fun onItemClicked(
         movieId: Long?
     ) {
-        if (movieId != null) {
+        movieId?.let {
             supportFragmentManager.beginTransaction()
                 .add(
                     R.id.main_container,

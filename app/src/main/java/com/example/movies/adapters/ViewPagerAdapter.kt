@@ -15,9 +15,11 @@ import com.example.movies.databinding.ViewpagerHolderBinding
 import com.example.movies.fragments.FragmentMoviesList
 import com.example.movies.viewmodels.MoviesListViewModel
 
-const val ITEM_MOVIE_TYPE = 0
-const val MAX_RECYCLED_VIEWS = 16
-const val INITIAL_ITEM_COUNT = 32
+private const val ITEM_MOVIE_TYPE = 0
+private const val MAX_RECYCLED_VIEWS = 16
+private const val INITIAL_ITEM_COUNT = 32
+private const val SPAN_COUNT_LANDSCAPE = 4
+private const val SPAN_COUNT_PORTRAIT = 2
 
 class ViewPagerAdapter(
     private var movies: List<MovieEntity>,
@@ -40,8 +42,8 @@ class ViewPagerAdapter(
         )
 
         val spanCount = when (parent.context.resources.configuration.orientation) {
-            Configuration.ORIENTATION_LANDSCAPE -> 4
-            else -> 2
+            Configuration.ORIENTATION_LANDSCAPE -> SPAN_COUNT_LANDSCAPE
+            else -> SPAN_COUNT_PORTRAIT
         }
 
         val gridLayoutManager = GridLayoutManager(parent.context, spanCount).apply {

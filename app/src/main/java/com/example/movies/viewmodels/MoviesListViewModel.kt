@@ -1,19 +1,26 @@
 package com.example.movies.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.movies.MoviesCategories
 import com.example.movies.data.Genre
 import com.example.movies.database.entities.MovieEntity
 import com.example.movies.database.MoviesRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.Dispatchers
 
 class MoviesListViewModel(
     private val repository: MoviesRepository
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Log.e("TAG", "Network/db problem: ", throwable)
+        Log.e(javaClass.simpleName, "Network/db problem: ", throwable)
         _errorFound.value = true
     }
 
@@ -97,7 +104,9 @@ class MoviesListViewModel(
         _currentCategory = category
     }
 
-    private suspend fun loadMoviesWithActorsByCategory(category: MoviesCategories) = withContext(Dispatchers.IO) {
+    private suspend fun loadMoviesWithActorsByCategory(category: MoviesCategories) = withContext(
+        Dispatchers.IO
+    ) {
         val moviesRemote = repository.loadMovies(category)
         val moviesIds =
             repository.updateAllMoviesByCategory(moviesRemote, genres, category.toString())
