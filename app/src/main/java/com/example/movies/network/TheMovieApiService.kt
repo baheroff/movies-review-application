@@ -1,6 +1,9 @@
 package com.example.movies.network
 
-import com.example.movies.data.*
+import com.example.movies.data.Cast
+import com.example.movies.data.Genres
+import com.example.movies.data.ImageUrl
+import com.example.movies.data.MoviesList
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

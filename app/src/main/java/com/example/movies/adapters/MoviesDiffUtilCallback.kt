@@ -6,7 +6,7 @@ import com.example.movies.database.entities.MovieEntity
 class MoviesDiffUtilCallback(
     private val oldList: List<MovieEntity>,
     private val newList: List<MovieEntity>
-) : DiffUtil.Callback(){
+) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
 

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class MoviesDetailsViewModel(
     private val repository: MoviesRepository,
     movieId: Long?
-): ViewModel() {
+) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e("TAG", "Db problem: ", throwable)

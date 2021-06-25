@@ -11,8 +11,7 @@ import com.example.movies.databinding.ViewHolderActorBinding
 class ActorAdapter(
     private val actors: List<ActorEntity>,
     private val baseImageUrl: String
-) : RecyclerView.Adapter<ActorViewHolder>()
-{
+) : RecyclerView.Adapter<ActorViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -33,23 +32,23 @@ class ActorAdapter(
         holder.bind(getItem(position), baseImageUrl)
     }
 
-    override fun onFailedToRecycleView(holder: ActorViewHolder): Boolean = false
+    override fun onFailedToRecycleView(holder: ActorViewHolder): Boolean = true
 
     override fun getItemCount(): Int = actors.size
 
     private fun getItem(position: Int) = actors[position]
-
 }
 
 class ActorViewHolder(
     private val binding: ViewHolderActorBinding
-) : RecyclerView.ViewHolder(binding.root){
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         actor: ActorEntity,
         baseImageUrl: String
-    ){
-        binding.avatar.load(baseImageUrl
+    ) {
+        binding.avatar.load(
+            baseImageUrl
                     + "original"
                     + actor.imageUrl
         ) {

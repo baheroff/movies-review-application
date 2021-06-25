@@ -1,16 +1,20 @@
 package com.example.movies.database.entities
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.PrimaryKey
+import androidx.room.ColumnInfo
 import com.example.movies.database.DbContract
 
-@Entity(tableName = DbContract.Actors.TABLE_NAME,
-        foreignKeys = [ForeignKey(
-            entity = MovieEntity::class,
-            parentColumns = arrayOf(DbContract.Movies.COLUMN_NAME_ID),
-            childColumns = arrayOf(DbContract.Actors.COLUMN_NAME_MOVIE_ID),
-            onDelete = CASCADE
-        )]
+@Entity(
+    tableName = DbContract.Actors.TABLE_NAME,
+    foreignKeys = [ForeignKey(
+        entity = MovieEntity::class,
+        parentColumns = arrayOf(DbContract.Movies.COLUMN_NAME_ID),
+        childColumns = arrayOf(DbContract.Actors.COLUMN_NAME_MOVIE_ID),
+        onDelete = CASCADE
+    )]
 )
 data class ActorEntity(
     @PrimaryKey(autoGenerate = true)
