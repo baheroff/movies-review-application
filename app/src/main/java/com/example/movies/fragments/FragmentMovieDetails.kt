@@ -17,7 +17,7 @@ import com.example.movies.viewmodels.ViewModelFactory
 
 class FragmentMovieDetails : Fragment() {
 
-    private lateinit var binding: FragmentMovieDetailsBinding
+    private lateinit var binding: FragmentMovieDetailsBinding /////
 
     private var backTransaction: BackTransaction? = null
 
